@@ -1,3 +1,6 @@
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/A-6SvK?referralCode=xsbY2R)
+[![](https://dcbadge.vercel.app/api/server/graphos)](https://discord.gg/graphos)
+
 A starting point for deploying the Router via a Dockerfile using [GraphOS Enterprise].
 
 > ⚠️This template requires [GraphOS Enterprise], if you'd like a similar template that does _not_ require an enterprise plan, please open a discussion and describe your use-case and requirements.
