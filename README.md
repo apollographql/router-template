@@ -1,6 +1,6 @@
 A starting point for deploying the Router via a Dockerfile using [GraphOS Enterprise].
 
-> ⚠️This template requires [GraphOS Enterprise], if you'd like a similar template that does _not_ require an enterprise plan, please open an issue and describe your use-case and requirements.
+> ⚠️This template requires [GraphOS Enterprise], if you'd like a similar template that does _not_ require an enterprise plan, please open a discussion and describe your use-case and requirements.
 
 ## What's included
 
