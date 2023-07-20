@@ -1,4 +1,4 @@
-FROM ghcr.io/apollographql/router:v1.24.0
+FROM ghcr.io/apollographql/router:v1.25.0
 
 COPY router.yaml /config.yaml
 
