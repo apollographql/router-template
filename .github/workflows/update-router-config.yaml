@@ -1,0 +1,22 @@
+on: push
+jobs:
+  update_schema:
+    name: Update Router Config JSON Schema
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.0
+      - name: Build Docker image
+        run: docker build -t router .
+      - name: Update Config JSON Schema
+        run: docker run -it router config schema > .apollo/router_config_schema.json
+      - name: Check if anything changed
+        run: git diff --exit-code .apollo/router_config_schema.json
+      - name: Commit and push changes
+        if: ${{ failure() }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "<>"
+          git add .apollo/router_config_schema.json
+          git commit -m "Update router config schema"
