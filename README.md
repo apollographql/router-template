@@ -10,6 +10,7 @@ A starting point for deploying the Router via a Dockerfile using [GraphOS Enterp
 - `router.yaml`—[configuration for the router](https://www.apollographql.com/docs/router/configuration/overview)
 - `Dockerfile`—used to build the router for deployment
 - `.apollo`—contains some JSON schemas for the config files (to make IDE experience better)
+- `.github/workflows/update-router-config.yaml`—auto-update JSON schemas when the router version changes
 - `.vscode`—contains recommended VS Code settings
 - `.idea`—contains recommended Jetbrains editor settings
 - `renovate.json`—configured to keep Router up to date
