@@ -1,4 +1,7 @@
-on: push
+on:
+  push:
+    paths:
+      - Dockerfile
 jobs:
   update_schema:
     name: Update Router Config JSON Schema
