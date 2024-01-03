@@ -6,21 +6,16 @@ supergraph:
   query_planning:
     experimental_cache:
       in_memory:
-        limit: 512 #This is the default value
+        limit: 512 # This is the default value
 homepage:
   enabled: false
 include_subgraph_errors:
   all: true
-preview_operation_limits:
+
+limits:
   parser_max_tokens: 15000 # This is the default value.
   parser_max_recursion: 4096 # This is the default value.
   max_depth: 100 # Must be 15 or larger to support standard introspection query
   max_height: 200
   max_aliases: 30
   max_root_fields: 20
-
-# apq:
-#   router:
-#     cache:
-#       in_memory:
-#         limit: 512 # This is the default value
