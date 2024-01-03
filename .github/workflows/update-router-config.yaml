@@ -20,3 +20,4 @@ jobs:
           git config --global user.email "<>"
           git add .apollo/router_config_schema.json
           git commit -m "Update router config schema"
+          git push
