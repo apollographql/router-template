@@ -1,0 +1,23 @@
+on:
+  push:
+    paths:
+      - Dockerfile
+      - router.yaml
+      - .github/workflows/test.yaml
+      - .github/workflows/supergraph.graphql
+jobs:
+  test:
+    name: Smoke test Router
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+      - name: Build Docker image
+        run: docker build -t router .
+      - name: Run Router
+        run: docker run -d --name router -p 4000:4000 -v ./.github/workflows/supergraph.graphql:/dist/supergraph.graphql router -s supergraph.graphql
+      - name: Wait for Router to start
+        run: sleep 5
+      - name: Test Router
+        run: |
+          curl http://localhost:4000 -d '{"query": "query{__typename}"}' -H "Content-Type: application/json"
