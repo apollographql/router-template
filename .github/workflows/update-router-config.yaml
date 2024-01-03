@@ -16,8 +16,8 @@ jobs:
       - name: Commit and push changes
         if: ${{ failure() }}
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "<>"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .apollo/router_config_schema.json
           git commit -m "Update router config schema"
           git push
