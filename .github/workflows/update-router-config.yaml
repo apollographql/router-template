@@ -10,7 +10,7 @@ jobs:
       - name: Build Docker image
         run: docker build -t router .
       - name: Update Config JSON Schema
-        run: docker run -it router config schema > .apollo/router_config_schema.json
+        run: docker run router config schema > .apollo/router_config_schema.json
       - name: Check if anything changed
         run: git diff --exit-code .apollo/router_config_schema.json
       - name: Commit and push changes
