@@ -79,6 +79,16 @@
                     "urls"
                   ],
                   "properties": {
+                    "namespace": {
+                      "description": "namespace used to prefix Redis keys",
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "password": {
+                      "description": "Redis password if not provided in the URLs. This field takes precedence over the password in the URL",
+                      "type": "string",
+                      "nullable": true
+                    },
                     "timeout": {
                       "description": "Redis request timeout (default: 2ms)",
                       "default": null,
@@ -136,6 +146,11 @@
                         "type": "string",
                         "format": "uri"
                       }
+                    },
+                    "username": {
+                      "description": "Redis username if not provided in the URLs. This field takes precedence over the username in the URL",
+                      "type": "string",
+                      "nullable": true
                     }
                   },
                   "additionalProperties": false,
@@ -1203,6 +1218,16 @@
             "urls"
           ],
           "properties": {
+            "namespace": {
+              "description": "namespace used to prefix Redis keys",
+              "type": "string",
+              "nullable": true
+            },
+            "password": {
+              "description": "Redis password if not provided in the URLs. This field takes precedence over the password in the URL",
+              "type": "string",
+              "nullable": true
+            },
             "timeout": {
               "description": "Redis request timeout (default: 2ms)",
               "default": null,
@@ -1260,6 +1285,11 @@
                 "type": "string",
                 "format": "uri"
               }
+            },
+            "username": {
+              "description": "Redis username if not provided in the URLs. This field takes precedence over the username in the URL",
+              "type": "string",
+              "nullable": true
             }
           },
           "additionalProperties": false
@@ -1795,11 +1825,11 @@
         "warn_only": false,
         "parser_max_recursion": 500,
         "parser_max_tokens": 15000,
-        "experimental_http_max_request_bytes": 2000000
+        "http_max_request_bytes": 2000000
       },
       "type": "object",
       "properties": {
-        "experimental_http_max_request_bytes": {
+        "http_max_request_bytes": {
           "description": "Limit the size of incoming HTTP requests read from the network, to protect against running out of memory. Default: 2000000 (2 MB)",
           "default": 2000000,
           "type": "integer",
@@ -2279,6 +2309,16 @@
                     "urls"
                   ],
                   "properties": {
+                    "namespace": {
+                      "description": "namespace used to prefix Redis keys",
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "password": {
+                      "description": "Redis password if not provided in the URLs. This field takes precedence over the password in the URL",
+                      "type": "string",
+                      "nullable": true
+                    },
                     "timeout": {
                       "description": "Redis request timeout (default: 2ms)",
                       "default": null,
@@ -2336,6 +2376,11 @@
                         "type": "string",
                         "format": "uri"
                       }
+                    },
+                    "username": {
+                      "description": "Redis username if not provided in the URLs. This field takes precedence over the username in the URL",
+                      "type": "string",
+                      "nullable": true
                     }
                   },
                   "additionalProperties": false,
