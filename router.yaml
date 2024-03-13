@@ -4,7 +4,7 @@ supergraph:
   introspection: true
   listen: 0.0.0.0:${env.PORT:-4000}
   query_planning:
-    experimental_cache:
+    cache:
       in_memory:
         limit: 512 # This is the default value
 homepage:
@@ -19,3 +19,8 @@ limits:
   max_height: 200
   max_aliases: 30
   max_root_fields: 20
+
+telemetry:
+  instrumentation:
+    spans:
+      mode: spec_compliant
