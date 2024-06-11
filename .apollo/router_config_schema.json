@@ -5138,6 +5138,20 @@
           "additionalProperties": false
         },
         {
+          "description": "Apollo Studio operation id",
+          "type": "object",
+          "required": [
+            "studio_operation_id"
+          ],
+          "properties": {
+            "studio_operation_id": {
+              "description": "Apollo Studio operation id",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
           "description": "A value from context.",
           "type": "object",
           "required": [
@@ -6947,13 +6961,6 @@
           "type": "string",
           "enum": [
             "datadog"
-          ]
-        },
-        {
-          "description": "Apollo Studio trace id",
-          "type": "string",
-          "enum": [
-            "apollo"
           ]
         }
       ]
