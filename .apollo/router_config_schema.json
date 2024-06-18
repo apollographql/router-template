@@ -289,6 +289,25 @@
         }
       ]
     },
+    "ApolloSignatureNormalizationAlgorithm": {
+      "description": "Apollo usage report signature normalization algorithm",
+      "oneOf": [
+        {
+          "description": "Use the algorithm that matches the JavaScript-based implementation.",
+          "type": "string",
+          "enum": [
+            "legacy"
+          ]
+        },
+        {
+          "description": "Use a new algorithm that includes input object forms, normalized aliases and variable names, and removes some edge cases from the JS implementation that affected normalization.",
+          "type": "string",
+          "enum": [
+            "enhanced"
+          ]
+        }
+      ]
+    },
     "Apq": {
       "description": "Automatic Persisted Queries (APQ) configuration",
       "type": "object",
@@ -1691,10 +1710,22 @@
           "description": "#/definitions/ErrorsConfiguration",
           "$ref": "#/definitions/ErrorsConfiguration"
         },
+        "experimental_apollo_signature_normalization_algorithm": {
+          "description": "#/definitions/ApolloSignatureNormalizationAlgorithm",
+          "$ref": "#/definitions/ApolloSignatureNormalizationAlgorithm"
+        },
         "experimental_otlp_endpoint": {
           "description": "The Apollo Studio endpoint for exporting traces and metrics.",
           "default": "https://usage-reporting.api.apollographql.com/",
           "type": "string"
+        },
+        "experimental_otlp_tracing_protocol": {
+          "description": "#/definitions/Protocol",
+          "$ref": "#/definitions/Protocol"
+        },
+        "experimental_otlp_tracing_sampler": {
+          "description": "#/definitions/SamplerOption",
+          "$ref": "#/definitions/SamplerOption"
         },
         "field_level_instrumentation_sampler": {
           "description": "#/definitions/SamplerOption",
@@ -4254,6 +4285,11 @@
       "properties": {
         "enabled": {
           "description": "Activates Persisted Queries (disabled by default)",
+          "default": false,
+          "type": "boolean"
+        },
+        "experimental_prewarm_query_plan_cache": {
+          "description": "Experimental feature to prewarm the query plan cache with persisted queries",
           "default": false,
           "type": "boolean"
         },
