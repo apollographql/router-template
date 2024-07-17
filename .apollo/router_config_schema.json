@@ -1556,7 +1556,7 @@
         },
         "enable_span_mapping": {
           "description": "Enable datadog span mapping for span name and resource name.",
-          "default": false,
+          "default": true,
           "type": "boolean"
         },
         "enabled": {
@@ -1566,6 +1566,19 @@
         "endpoint": {
           "description": "#/definitions/UriEndpoint",
           "$ref": "#/definitions/UriEndpoint"
+        },
+        "fixed_span_names": {
+          "description": "Fixes the span names, this means that the APM view will show the original span names in the operation dropdown.",
+          "default": true,
+          "type": "boolean"
+        },
+        "resource_mapping": {
+          "description": "Custom mapping to be used as the resource field in spans, defaults to: router -> http.route supergraph -> graphql.operation.name query_planning -> graphql.operation.name subgraph -> subgraph.name subgraph_request -> subgraph.name http_request -> http.route",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": false
@@ -2570,8 +2583,8 @@
           "type": "boolean"
         },
         "format": {
-          "description": "#/definitions/TraceIdFormat",
-          "$ref": "#/definitions/TraceIdFormat"
+          "description": "#/definitions/TraceIdFormat2",
+          "$ref": "#/definitions/TraceIdFormat2"
         },
         "header_name": {
           "description": "Choose the header name to expose trace_id (default: apollo-trace-id)",
@@ -4407,6 +4420,11 @@
           "default": false,
           "type": "boolean"
         },
+        "legacy_introspection_caching": {
+          "description": "Activates introspection response caching Historically, the Router has executed introspection queries in the query planner, and cached their response in its cache because they were expensive. This will change soon as introspection will be removed from the query planner. In the meantime, since storing introspection responses can fill up the cache, this option can be used to deactivate it. Default: true",
+          "default": true,
+          "type": "boolean"
+        },
         "warmed_up_queries": {
           "description": "Warms up the cache on reloads by running the query plan over a list of the most used queries (from the in memory cache) Configures the number of queries warmed up. Defaults to 1/3 of the in memory cache",
           "default": null,
@@ -4855,6 +4873,11 @@
           "default": false,
           "type": "boolean"
         },
+        "condition": {
+          "description": "#/definitions/Condition_for_RouterSelector",
+          "$ref": "#/definitions/Condition_for_RouterSelector",
+          "nullable": true
+        },
         "context": {
           "description": "Send the context",
           "default": false,
@@ -4891,6 +4914,11 @@
           "description": "Send the body",
           "default": false,
           "type": "boolean"
+        },
+        "condition": {
+          "description": "#/definitions/Condition_for_RouterSelector",
+          "$ref": "#/definitions/Condition_for_RouterSelector",
+          "nullable": true
         },
         "context": {
           "description": "Send the context",
@@ -4991,8 +5019,8 @@
           ],
           "properties": {
             "trace_id": {
-              "description": "#/definitions/TraceIdFormat2",
-              "$ref": "#/definitions/TraceIdFormat2"
+              "description": "#/definitions/TraceIdFormat",
+              "$ref": "#/definitions/TraceIdFormat"
             }
           },
           "additionalProperties": false
@@ -5772,6 +5800,11 @@
           "default": false,
           "type": "boolean"
         },
+        "condition": {
+          "description": "#/definitions/Condition_for_SubgraphSelector",
+          "$ref": "#/definitions/Condition_for_SubgraphSelector",
+          "nullable": true
+        },
         "context": {
           "description": "Send the context",
           "default": false,
@@ -5808,6 +5841,11 @@
           "description": "Send the body",
           "default": false,
           "type": "boolean"
+        },
+        "condition": {
+          "description": "#/definitions/Condition_for_SubgraphSelector",
+          "$ref": "#/definitions/Condition_for_SubgraphSelector",
+          "nullable": true
         },
         "context": {
           "description": "Send the context",
@@ -6122,6 +6160,19 @@
             "response_context": {
               "description": "The response context key.",
               "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "subgraph_on_graphql_error"
+          ],
+          "properties": {
+            "subgraph_on_graphql_error": {
+              "description": "Boolean set to true if the response body contains graphql error",
+              "type": "boolean"
             }
           },
           "additionalProperties": false
@@ -6477,6 +6528,11 @@
           "default": false,
           "type": "boolean"
         },
+        "condition": {
+          "description": "#/definitions/Condition_for_SupergraphSelector",
+          "$ref": "#/definitions/Condition_for_SupergraphSelector",
+          "nullable": true
+        },
         "context": {
           "description": "Send the context",
           "default": false,
@@ -6508,6 +6564,11 @@
           "description": "Send the body",
           "default": false,
           "type": "boolean"
+        },
+        "condition": {
+          "description": "#/definitions/Condition_for_SupergraphSelector",
+          "$ref": "#/definitions/Condition_for_SupergraphSelector",
+          "nullable": true
         },
         "context": {
           "description": "Send the context",
@@ -6815,6 +6876,20 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "description": "Boolean returning true if it's the primary response and not events like subscription events or deferred responses",
+          "type": "object",
+          "required": [
+            "is_primary_response"
+          ],
+          "properties": {
+            "is_primary_response": {
+              "description": "Boolean returning true if it's the primary response and not events like subscription events or deferred responses",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
@@ -6960,6 +7035,24 @@
     "TraceIdFormat": {
       "oneOf": [
         {
+          "description": "Open Telemetry trace ID, a hex string.",
+          "type": "string",
+          "enum": [
+            "open_telemetry"
+          ]
+        },
+        {
+          "description": "Datadog trace ID, a u64.",
+          "type": "string",
+          "enum": [
+            "datadog"
+          ]
+        }
+      ]
+    },
+    "TraceIdFormat2": {
+      "oneOf": [
+        {
           "description": "Format the Trace ID as a hexadecimal number\n\n(e.g. Trace ID 16 -> 00000000000000000000000000000010)",
           "type": "string",
           "enum": [
@@ -6972,20 +7065,9 @@
           "enum": [
             "decimal"
           ]
-        }
-      ]
-    },
-    "TraceIdFormat2": {
-      "oneOf": [
-        {
-          "description": "Open Telemetry trace ID, a hex string.",
-          "type": "string",
-          "enum": [
-            "open_telemetry"
-          ]
         },
         {
-          "description": "Datadog trace ID, a u64.",
+          "description": "Datadog",
           "type": "string",
           "enum": [
             "datadog"
