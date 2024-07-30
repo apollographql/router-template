@@ -32,10 +32,6 @@
       "description": "#/definitions/CSRFConfig",
       "$ref": "#/definitions/CSRFConfig"
     },
-    "experimental_api_schema_generation_mode": {
-      "description": "#/definitions/ApiSchemaMode",
-      "$ref": "#/definitions/ApiSchemaMode"
-    },
     "experimental_apollo_metrics_generation_mode": {
       "description": "#/definitions/ApolloMetricsGenerationMode",
       "$ref": "#/definitions/ApolloMetricsGenerationMode"
@@ -237,30 +233,10 @@
       },
       "additionalProperties": false
     },
-    "ApiSchemaMode": {
-      "description": "API schema generation modes.",
-      "oneOf": [
-        {
-          "description": "Use the new Rust-based implementation.",
-          "type": "string",
-          "enum": [
-            "new"
-          ]
-        },
-        {
-          "description": "Use the old JavaScript-based implementation.",
-          "type": "string",
-          "enum": [
-            "legacy"
-          ]
-        },
-        {
-          "description": "Use Rust-based and Javascript-based implementations side by side, logging warnings if the implementations disagree.",
-          "type": "string",
-          "enum": [
-            "both"
-          ]
-        }
+    "All": {
+      "type": "string",
+      "enum": [
+        "all"
       ]
     },
     "ApolloMetricsGenerationMode": {
@@ -642,6 +618,35 @@
         }
       },
       "additionalProperties": false
+    },
+    "CacheAttributes": {
+      "type": "object",
+      "properties": {
+        "entity.type": {
+          "description": "Entity type",
+          "default": null,
+          "type": "boolean",
+          "nullable": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "CacheInstrumentsConfig": {
+      "type": "object",
+      "properties": {
+        "apollo.router.operations.entity.cache": {
+          "description": "#/definitions/DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector",
+          "$ref": "#/definitions/DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CacheKind": {
+      "type": "string",
+      "enum": [
+        "hit",
+        "miss"
+      ]
     },
     "CallbackMode": {
       "description": "Using a callback url",
@@ -1579,6 +1584,24 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "span_metrics": {
+          "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request` and `http_request`.",
+          "default": {
+            "subgraph_request": true,
+            "query_planning": true,
+            "router": true,
+            "execution": true,
+            "supergraph": true,
+            "subgraph": true,
+            "request": true,
+            "parse_query": true,
+            "http_request": true
+          },
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
         }
       },
       "additionalProperties": false
@@ -2104,6 +2127,29 @@
         }
       ]
     },
+    "DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "object",
+          "required": [
+            "attributes"
+          ],
+          "properties": {
+            "attributes": {
+              "description": "#/definitions/extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector",
+              "$ref": "#/definitions/extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
     "DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::graphql::attributes::GraphQLAttributes_apollo_router::plugins::telemetry::config_new::graphql::selectors::GraphQLSelector": {
       "anyOf": [
         {
@@ -2185,6 +2231,17 @@
       "type": "string",
       "enum": [
         "enabled"
+      ]
+    },
+    "EntityType": {
+      "anyOf": [
+        {
+          "description": "#/definitions/All",
+          "$ref": "#/definitions/All"
+        },
+        {
+          "type": "string"
+        }
       ]
     },
     "ErrorConfig": {
@@ -3345,6 +3402,42 @@
         }
       ]
     },
+    "Instrument_for_CacheAttributes_and_SubgraphSelector_and_SubgraphValue": {
+      "type": "object",
+      "required": [
+        "description",
+        "type",
+        "unit",
+        "value"
+      ],
+      "properties": {
+        "attributes": {
+          "description": "#/definitions/extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector",
+          "$ref": "#/definitions/extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector"
+        },
+        "condition": {
+          "description": "#/definitions/Condition_for_SubgraphSelector",
+          "$ref": "#/definitions/Condition_for_SubgraphSelector"
+        },
+        "description": {
+          "description": "The description of the instrument.",
+          "type": "string"
+        },
+        "type": {
+          "description": "#/definitions/InstrumentType",
+          "$ref": "#/definitions/InstrumentType"
+        },
+        "unit": {
+          "description": "The units of the instrument, e.g. \"ms\", \"bytes\", \"requests\".",
+          "type": "string"
+        },
+        "value": {
+          "description": "#/definitions/SubgraphValue",
+          "$ref": "#/definitions/SubgraphValue"
+        }
+      },
+      "additionalProperties": false
+    },
     "Instrument_for_GraphQLAttributes_and_GraphQLSelector_and_GraphQLValue": {
       "type": "object",
       "required": [
@@ -3511,6 +3604,10 @@
     "InstrumentsConfig": {
       "type": "object",
       "properties": {
+        "cache": {
+          "description": "#/definitions/extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::CacheInstrumentsConfig_apollo_router::plugins::telemetry::config_new::instruments::Instrument<apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes, apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector, apollo_router::plugins::telemetry::config_new::selectors::SubgraphValue>",
+          "$ref": "#/definitions/extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::CacheInstrumentsConfig_apollo_router::plugins::telemetry::config_new::instruments::Instrument<apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes,_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector,_apollo_router::plugins::telemetry::config_new::selectors::SubgraphValue>"
+        },
         "default_requirement_level": {
           "description": "#/definitions/DefaultAttributeRequirementLevel",
           "$ref": "#/definitions/DefaultAttributeRequirementLevel"
@@ -4683,97 +4780,97 @@
           "nullable": true
         },
         "error.type": {
-          "description": "Describes a class of error the operation ended with. Examples: * timeout * name_resolution_error * 500 Requirement level: Conditionally Required: If request has ended with an error.",
+          "description": "Describes a class of error the operation ended with. Examples:\n\n* timeout * name_resolution_error * 500\n\nRequirement level: Conditionally Required: If request has ended with an error.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.request.body.size": {
-          "description": "The size of the request payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples: * 3495 Requirement level: Recommended",
+          "description": "The size of the request payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples:\n\n* 3495\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.request.method": {
-          "description": "HTTP request method. Examples: * GET * POST * HEAD Requirement level: Required",
+          "description": "HTTP request method. Examples:\n\n* GET * POST * HEAD\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.response.body.size": {
-          "description": "The size of the response payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples: * 3495 Requirement level: Recommended",
+          "description": "The size of the response payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples:\n\n* 3495\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.response.status_code": {
-          "description": "HTTP response status code. Examples: * 200 Requirement level: Conditionally Required: If and only if one was received/sent.",
+          "description": "HTTP response status code. Examples:\n\n* 200\n\nRequirement level: Conditionally Required: If and only if one was received/sent.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.route": {
-          "description": "The matched route (path template in the format used by the respective server framework). Examples: * /graphql Requirement level: Conditionally Required: If and only if it’s available",
+          "description": "The matched route (path template in the format used by the respective server framework). Examples:\n\n* /graphql\n\nRequirement level: Conditionally Required: If and only if it’s available",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.local.address": {
-          "description": "Local socket address. Useful in case of a multi-IP host. Examples: * 10.1.2.80 * /tmp/my.sock Requirement level: Opt-In",
+          "description": "Local socket address. Useful in case of a multi-IP host. Examples:\n\n* 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Opt-In",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.local.port": {
-          "description": "Local socket port. Useful in case of a multi-port host. Examples: * 65123 Requirement level: Opt-In",
+          "description": "Local socket port. Useful in case of a multi-port host. Examples:\n\n* 65123\n\nRequirement level: Opt-In",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.peer.address": {
-          "description": "Peer address of the network connection - IP address or Unix domain socket name. Examples: * 10.1.2.80 * /tmp/my.sock Requirement level: Recommended",
+          "description": "Peer address of the network connection - IP address or Unix domain socket name. Examples:\n\n* 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.peer.port": {
-          "description": "Peer port number of the network connection. Examples: * 65123 Requirement level: Recommended",
+          "description": "Peer port number of the network connection. Examples:\n\n* 65123\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.protocol.name": {
-          "description": "OSI application layer or non-OSI equivalent. Examples: * http * spdy Requirement level: Recommended: if not default (http).",
+          "description": "OSI application layer or non-OSI equivalent. Examples:\n\n* http * spdy\n\nRequirement level: Recommended: if not default (http).",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.protocol.version": {
-          "description": "Version of the protocol specified in network.protocol.name. Examples: * 1.0 * 1.1 * 2 * 3 Requirement level: Recommended",
+          "description": "Version of the protocol specified in network.protocol.name. Examples:\n\n* 1.0 * 1.1 * 2 * 3\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.transport": {
-          "description": "OSI transport layer. Examples: * tcp * udp Requirement level: Conditionally Required",
+          "description": "OSI transport layer. Examples:\n\n* tcp * udp\n\nRequirement level: Conditionally Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.type": {
-          "description": "OSI network layer or non-OSI equivalent. Examples: * ipv4 * ipv6 Requirement level: Recommended",
+          "description": "OSI network layer or non-OSI equivalent. Examples:\n\n* ipv4 * ipv6\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "server.address": {
-          "description": "Name of the local HTTP server that received the request. Examples: * example.com * 10.1.2.80 * /tmp/my.sock Requirement level: Recommended",
+          "description": "Name of the local HTTP server that received the request. Examples:\n\n* example.com * 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "server.port": {
-          "description": "Port of the local HTTP server that received the request. Examples: * 80 * 8080 * 443 Requirement level: Recommended",
+          "description": "Port of the local HTTP server that received the request. Examples:\n\n* 80 * 8080 * 443\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -4785,25 +4882,25 @@
           "nullable": true
         },
         "url.path": {
-          "description": "The URI path component Examples: * /search Requirement level: Required",
+          "description": "The URI path component Examples:\n\n* /search\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "url.query": {
-          "description": "The URI query component Examples: * q=OpenTelemetry Requirement level: Conditionally Required: If and only if one was received/sent.",
+          "description": "The URI query component Examples:\n\n* q=OpenTelemetry\n\nRequirement level: Conditionally Required: If and only if one was received/sent.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "url.scheme": {
-          "description": "The URI scheme component identifying the used protocol. Examples: * http * https Requirement level: Required",
+          "description": "The URI scheme component identifying the used protocol. Examples:\n\n* http * https\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "user_agent.original": {
-          "description": "Value of the HTTP User-Agent header sent by the client. Examples: * CERN-LineMode/2.15 * libwww/2.17b3 Requirement level: Recommended",
+          "description": "Value of the HTTP User-Agent header sent by the client. Examples:\n\n* CERN-LineMode/2.15 * libwww/2.17b3\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -5585,25 +5682,25 @@
       "type": "object",
       "properties": {
         "subgraph.graphql.document": {
-          "description": "The GraphQL document being executed. Examples: * query findBookById { bookById(id: ?) { name } } Requirement level: Recommended",
+          "description": "The GraphQL document being executed. Examples:\n\n* `query findBookById { bookById(id: ?) { name } }`\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.graphql.operation.name": {
-          "description": "The name of the operation being executed. Examples: * findBookById Requirement level: Recommended",
+          "description": "The name of the operation being executed. Examples:\n\n* findBookById\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.graphql.operation.type": {
-          "description": "The type of the operation being executed. Examples: * query * subscription * mutation Requirement level: Recommended",
+          "description": "The type of the operation being executed. Examples:\n\n* query * subscription * mutation\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.name": {
-          "description": "The name of the subgraph Examples: * products Requirement level: Required",
+          "description": "The name of the subgraph Examples:\n\n* products\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -5899,6 +5996,19 @@
             "subgraph_operation_kind": {
               "description": "#/definitions/OperationKind",
               "$ref": "#/definitions/OperationKind"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "subgraph_name"
+          ],
+          "properties": {
+            "subgraph_name": {
+              "description": "The subgraph name",
+              "type": "boolean"
             }
           },
           "additionalProperties": false
@@ -6242,6 +6352,24 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "cache"
+          ],
+          "properties": {
+            "cache": {
+              "description": "#/definitions/CacheKind",
+              "$ref": "#/definitions/CacheKind"
+            },
+            "entity_type": {
+              "description": "#/definitions/EntityType",
+              "$ref": "#/definitions/EntityType",
+              "nullable": true
+            }
+          },
+          "additionalProperties": false
         }
       ]
     },
@@ -6463,19 +6591,19 @@
           "nullable": true
         },
         "graphql.document": {
-          "description": "The GraphQL document being executed. Examples: * query findBookById { bookById(id: ?) { name } } Requirement level: Recommended",
+          "description": "The GraphQL document being executed. Examples:\n\n* `query findBookById { bookById(id: ?) { name } }`\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "graphql.operation.name": {
-          "description": "The name of the operation being executed. Examples: * findBookById Requirement level: Recommended",
+          "description": "The name of the operation being executed. Examples:\n\n* findBookById\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "graphql.operation.type": {
-          "description": "The type of the operation being executed. Examples: * query * subscription * mutation Requirement level: Recommended",
+          "description": "The type of the operation being executed. Examples:\n\n* query * subscription * mutation\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7292,97 +7420,97 @@
           "nullable": true
         },
         "error.type": {
-          "description": "Describes a class of error the operation ended with. Examples: * timeout * name_resolution_error * 500 Requirement level: Conditionally Required: If request has ended with an error.",
+          "description": "Describes a class of error the operation ended with. Examples:\n\n* timeout * name_resolution_error * 500\n\nRequirement level: Conditionally Required: If request has ended with an error.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.request.body.size": {
-          "description": "The size of the request payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples: * 3495 Requirement level: Recommended",
+          "description": "The size of the request payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples:\n\n* 3495\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.request.method": {
-          "description": "HTTP request method. Examples: * GET * POST * HEAD Requirement level: Required",
+          "description": "HTTP request method. Examples:\n\n* GET * POST * HEAD\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.response.body.size": {
-          "description": "The size of the response payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples: * 3495 Requirement level: Recommended",
+          "description": "The size of the response payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples:\n\n* 3495\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.response.status_code": {
-          "description": "HTTP response status code. Examples: * 200 Requirement level: Conditionally Required: If and only if one was received/sent.",
+          "description": "HTTP response status code. Examples:\n\n* 200\n\nRequirement level: Conditionally Required: If and only if one was received/sent.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.route": {
-          "description": "The matched route (path template in the format used by the respective server framework). Examples: * /graphql Requirement level: Conditionally Required: If and only if it’s available",
+          "description": "The matched route (path template in the format used by the respective server framework). Examples:\n\n* /graphql\n\nRequirement level: Conditionally Required: If and only if it’s available",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.local.address": {
-          "description": "Local socket address. Useful in case of a multi-IP host. Examples: * 10.1.2.80 * /tmp/my.sock Requirement level: Opt-In",
+          "description": "Local socket address. Useful in case of a multi-IP host. Examples:\n\n* 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Opt-In",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.local.port": {
-          "description": "Local socket port. Useful in case of a multi-port host. Examples: * 65123 Requirement level: Opt-In",
+          "description": "Local socket port. Useful in case of a multi-port host. Examples:\n\n* 65123\n\nRequirement level: Opt-In",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.peer.address": {
-          "description": "Peer address of the network connection - IP address or Unix domain socket name. Examples: * 10.1.2.80 * /tmp/my.sock Requirement level: Recommended",
+          "description": "Peer address of the network connection - IP address or Unix domain socket name. Examples:\n\n* 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.peer.port": {
-          "description": "Peer port number of the network connection. Examples: * 65123 Requirement level: Recommended",
+          "description": "Peer port number of the network connection. Examples:\n\n* 65123\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.protocol.name": {
-          "description": "OSI application layer or non-OSI equivalent. Examples: * http * spdy Requirement level: Recommended: if not default (http).",
+          "description": "OSI application layer or non-OSI equivalent. Examples:\n\n* http * spdy\n\nRequirement level: Recommended: if not default (http).",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.protocol.version": {
-          "description": "Version of the protocol specified in network.protocol.name. Examples: * 1.0 * 1.1 * 2 * 3 Requirement level: Recommended",
+          "description": "Version of the protocol specified in network.protocol.name. Examples:\n\n* 1.0 * 1.1 * 2 * 3\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.transport": {
-          "description": "OSI transport layer. Examples: * tcp * udp Requirement level: Conditionally Required",
+          "description": "OSI transport layer. Examples:\n\n* tcp * udp\n\nRequirement level: Conditionally Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.type": {
-          "description": "OSI network layer or non-OSI equivalent. Examples: * ipv4 * ipv6 Requirement level: Recommended",
+          "description": "OSI network layer or non-OSI equivalent. Examples:\n\n* ipv4 * ipv6\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "server.address": {
-          "description": "Name of the local HTTP server that received the request. Examples: * example.com * 10.1.2.80 * /tmp/my.sock Requirement level: Recommended",
+          "description": "Name of the local HTTP server that received the request. Examples:\n\n* example.com * 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "server.port": {
-          "description": "Port of the local HTTP server that received the request. Examples: * 80 * 8080 * 443 Requirement level: Recommended",
+          "description": "Port of the local HTTP server that received the request. Examples:\n\n* 80 * 8080 * 443\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7394,25 +7522,25 @@
           "nullable": true
         },
         "url.path": {
-          "description": "The URI path component Examples: * /search Requirement level: Required",
+          "description": "The URI path component Examples:\n\n* /search\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "url.query": {
-          "description": "The URI query component Examples: * q=OpenTelemetry Requirement level: Conditionally Required: If and only if one was received/sent.",
+          "description": "The URI query component Examples:\n\n* q=OpenTelemetry\n\nRequirement level: Conditionally Required: If and only if one was received/sent.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "url.scheme": {
-          "description": "The URI scheme component identifying the used protocol. Examples: * http * https Requirement level: Required",
+          "description": "The URI scheme component identifying the used protocol. Examples:\n\n* http * https\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "user_agent.original": {
-          "description": "Value of the HTTP User-Agent header sent by the client. Examples: * CERN-LineMode/2.15 * libwww/2.17b3 Requirement level: Recommended",
+          "description": "Value of the HTTP User-Agent header sent by the client. Examples:\n\n* CERN-LineMode/2.15 * libwww/2.17b3\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7440,97 +7568,97 @@
           "nullable": true
         },
         "error.type": {
-          "description": "Describes a class of error the operation ended with. Examples: * timeout * name_resolution_error * 500 Requirement level: Conditionally Required: If request has ended with an error.",
+          "description": "Describes a class of error the operation ended with. Examples:\n\n* timeout * name_resolution_error * 500\n\nRequirement level: Conditionally Required: If request has ended with an error.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.request.body.size": {
-          "description": "The size of the request payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples: * 3495 Requirement level: Recommended",
+          "description": "The size of the request payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples:\n\n* 3495\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.request.method": {
-          "description": "HTTP request method. Examples: * GET * POST * HEAD Requirement level: Required",
+          "description": "HTTP request method. Examples:\n\n* GET * POST * HEAD\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.response.body.size": {
-          "description": "The size of the response payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples: * 3495 Requirement level: Recommended",
+          "description": "The size of the response payload body in bytes. This is the number of bytes transferred excluding headers and is often, but not always, present as the Content-Length header. For requests using transport encoding, this should be the compressed size. Examples:\n\n* 3495\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.response.status_code": {
-          "description": "HTTP response status code. Examples: * 200 Requirement level: Conditionally Required: If and only if one was received/sent.",
+          "description": "HTTP response status code. Examples:\n\n* 200\n\nRequirement level: Conditionally Required: If and only if one was received/sent.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "http.route": {
-          "description": "The matched route (path template in the format used by the respective server framework). Examples: * /graphql Requirement level: Conditionally Required: If and only if it’s available",
+          "description": "The matched route (path template in the format used by the respective server framework). Examples:\n\n* /graphql\n\nRequirement level: Conditionally Required: If and only if it’s available",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.local.address": {
-          "description": "Local socket address. Useful in case of a multi-IP host. Examples: * 10.1.2.80 * /tmp/my.sock Requirement level: Opt-In",
+          "description": "Local socket address. Useful in case of a multi-IP host. Examples:\n\n* 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Opt-In",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.local.port": {
-          "description": "Local socket port. Useful in case of a multi-port host. Examples: * 65123 Requirement level: Opt-In",
+          "description": "Local socket port. Useful in case of a multi-port host. Examples:\n\n* 65123\n\nRequirement level: Opt-In",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.peer.address": {
-          "description": "Peer address of the network connection - IP address or Unix domain socket name. Examples: * 10.1.2.80 * /tmp/my.sock Requirement level: Recommended",
+          "description": "Peer address of the network connection - IP address or Unix domain socket name. Examples:\n\n* 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.peer.port": {
-          "description": "Peer port number of the network connection. Examples: * 65123 Requirement level: Recommended",
+          "description": "Peer port number of the network connection. Examples:\n\n* 65123\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.protocol.name": {
-          "description": "OSI application layer or non-OSI equivalent. Examples: * http * spdy Requirement level: Recommended: if not default (http).",
+          "description": "OSI application layer or non-OSI equivalent. Examples:\n\n* http * spdy\n\nRequirement level: Recommended: if not default (http).",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.protocol.version": {
-          "description": "Version of the protocol specified in network.protocol.name. Examples: * 1.0 * 1.1 * 2 * 3 Requirement level: Recommended",
+          "description": "Version of the protocol specified in network.protocol.name. Examples:\n\n* 1.0 * 1.1 * 2 * 3\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.transport": {
-          "description": "OSI transport layer. Examples: * tcp * udp Requirement level: Conditionally Required",
+          "description": "OSI transport layer. Examples:\n\n* tcp * udp\n\nRequirement level: Conditionally Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "network.type": {
-          "description": "OSI network layer or non-OSI equivalent. Examples: * ipv4 * ipv6 Requirement level: Recommended",
+          "description": "OSI network layer or non-OSI equivalent. Examples:\n\n* ipv4 * ipv6\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "server.address": {
-          "description": "Name of the local HTTP server that received the request. Examples: * example.com * 10.1.2.80 * /tmp/my.sock Requirement level: Recommended",
+          "description": "Name of the local HTTP server that received the request. Examples:\n\n* example.com * 10.1.2.80 * /tmp/my.sock\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "server.port": {
-          "description": "Port of the local HTTP server that received the request. Examples: * 80 * 8080 * 443 Requirement level: Recommended",
+          "description": "Port of the local HTTP server that received the request. Examples:\n\n* 80 * 8080 * 443\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7542,25 +7670,25 @@
           "nullable": true
         },
         "url.path": {
-          "description": "The URI path component Examples: * /search Requirement level: Required",
+          "description": "The URI path component Examples:\n\n* /search\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "url.query": {
-          "description": "The URI query component Examples: * q=OpenTelemetry Requirement level: Conditionally Required: If and only if one was received/sent.",
+          "description": "The URI query component Examples:\n\n* q=OpenTelemetry\n\nRequirement level: Conditionally Required: If and only if one was received/sent.",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "url.scheme": {
-          "description": "The URI scheme component identifying the used protocol. Examples: * http * https Requirement level: Required",
+          "description": "The URI scheme component identifying the used protocol. Examples:\n\n* http * https\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "user_agent.original": {
-          "description": "Value of the HTTP User-Agent header sent by the client. Examples: * CERN-LineMode/2.15 * libwww/2.17b3 Requirement level: Recommended",
+          "description": "Value of the HTTP User-Agent header sent by the client. Examples:\n\n* CERN-LineMode/2.15 * libwww/2.17b3\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7575,25 +7703,25 @@
       "type": "object",
       "properties": {
         "subgraph.graphql.document": {
-          "description": "The GraphQL document being executed. Examples: * query findBookById { bookById(id: ?) { name } } Requirement level: Recommended",
+          "description": "The GraphQL document being executed. Examples:\n\n* `query findBookById { bookById(id: ?) { name } }`\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.graphql.operation.name": {
-          "description": "The name of the operation being executed. Examples: * findBookById Requirement level: Recommended",
+          "description": "The name of the operation being executed. Examples:\n\n* findBookById\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.graphql.operation.type": {
-          "description": "The type of the operation being executed. Examples: * query * subscription * mutation Requirement level: Recommended",
+          "description": "The type of the operation being executed. Examples:\n\n* query * subscription * mutation\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.name": {
-          "description": "The name of the subgraph Examples: * products Requirement level: Required",
+          "description": "The name of the subgraph Examples:\n\n* products\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7608,25 +7736,25 @@
       "type": "object",
       "properties": {
         "subgraph.graphql.document": {
-          "description": "The GraphQL document being executed. Examples: * query findBookById { bookById(id: ?) { name } } Requirement level: Recommended",
+          "description": "The GraphQL document being executed. Examples:\n\n* `query findBookById { bookById(id: ?) { name } }`\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.graphql.operation.name": {
-          "description": "The name of the operation being executed. Examples: * findBookById Requirement level: Recommended",
+          "description": "The name of the operation being executed. Examples:\n\n* findBookById\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.graphql.operation.type": {
-          "description": "The type of the operation being executed. Examples: * query * subscription * mutation Requirement level: Recommended",
+          "description": "The type of the operation being executed. Examples:\n\n* query * subscription * mutation\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "subgraph.name": {
-          "description": "The name of the subgraph Examples: * products Requirement level: Required",
+          "description": "The name of the subgraph Examples:\n\n* products\n\nRequirement level: Required",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7666,19 +7794,19 @@
           "nullable": true
         },
         "graphql.document": {
-          "description": "The GraphQL document being executed. Examples: * query findBookById { bookById(id: ?) { name } } Requirement level: Recommended",
+          "description": "The GraphQL document being executed. Examples:\n\n* `query findBookById { bookById(id: ?) { name } }`\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "graphql.operation.name": {
-          "description": "The name of the operation being executed. Examples: * findBookById Requirement level: Recommended",
+          "description": "The name of the operation being executed. Examples:\n\n* findBookById\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "graphql.operation.type": {
-          "description": "The type of the operation being executed. Examples: * query * subscription * mutation Requirement level: Recommended",
+          "description": "The type of the operation being executed. Examples:\n\n* query * subscription * mutation\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7718,19 +7846,19 @@
           "nullable": true
         },
         "graphql.document": {
-          "description": "The GraphQL document being executed. Examples: * query findBookById { bookById(id: ?) { name } } Requirement level: Recommended",
+          "description": "The GraphQL document being executed. Examples:\n\n* `query findBookById { bookById(id: ?) { name } }`\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "graphql.operation.name": {
-          "description": "The name of the operation being executed. Examples: * findBookById Requirement level: Recommended",
+          "description": "The name of the operation being executed. Examples:\n\n* findBookById\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
         },
         "graphql.operation.type": {
-          "description": "The type of the operation being executed. Examples: * query * subscription * mutation Requirement level: Recommended",
+          "description": "The type of the operation being executed. Examples:\n\n* query * subscription * mutation\n\nRequirement level: Recommended",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7739,6 +7867,34 @@
       "additionalProperties": {
         "description": "#/definitions/SupergraphSelector",
         "$ref": "#/definitions/SupergraphSelector"
+      }
+    },
+    "extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::CacheInstrumentsConfig_apollo_router::plugins::telemetry::config_new::instruments::Instrument<apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes,_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector,_apollo_router::plugins::telemetry::config_new::selectors::SubgraphValue>": {
+      "type": "object",
+      "properties": {
+        "apollo.router.operations.entity.cache": {
+          "description": "#/definitions/DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector",
+          "$ref": "#/definitions/DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector"
+        }
+      },
+      "additionalProperties": {
+        "description": "#/definitions/Instrument_for_CacheAttributes_and_SubgraphSelector_and_SubgraphValue",
+        "$ref": "#/definitions/Instrument_for_CacheAttributes_and_SubgraphSelector_and_SubgraphValue"
+      }
+    },
+    "extendable_attribute_apollo_router::plugins::telemetry::config_new::cache::attributes::CacheAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector": {
+      "type": "object",
+      "properties": {
+        "entity.type": {
+          "description": "Entity type",
+          "default": null,
+          "type": "boolean",
+          "nullable": true
+        }
+      },
+      "additionalProperties": {
+        "description": "#/definitions/SubgraphSelector",
+        "$ref": "#/definitions/SubgraphSelector"
       }
     },
     "extendable_attribute_apollo_router::plugins::telemetry::config_new::events::RouterEventsConfig_apollo_router::plugins::telemetry::config_new::events::Event<apollo_router::plugins::telemetry::config_new::attributes::RouterAttributes,_apollo_router::plugins::telemetry::config_new::selectors::RouterSelector>": {
