@@ -32,6 +32,10 @@
       "description": "#/definitions/CSRFConfig",
       "$ref": "#/definitions/CSRFConfig"
     },
+    "demand_control": {
+      "description": "#/definitions/DemandControlConfig",
+      "$ref": "#/definitions/DemandControlConfig"
+    },
     "experimental_apollo_metrics_generation_mode": {
       "description": "#/definitions/ApolloMetricsGenerationMode",
       "$ref": "#/definitions/ApolloMetricsGenerationMode"
@@ -84,10 +88,6 @@
     "plugins": {
       "description": "#/definitions/Plugins",
       "$ref": "#/definitions/Plugins"
-    },
-    "preview_demand_control": {
-      "description": "#/definitions/DemandControlConfig",
-      "$ref": "#/definitions/DemandControlConfig"
     },
     "preview_entity_cache": {
       "description": "#/definitions/Config7",
@@ -1677,15 +1677,15 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request` and `http_request`.",
           "default": {
-            "http_request": true,
-            "request": true,
-            "subgraph": true,
-            "supergraph": true,
-            "query_planning": true,
             "parse_query": true,
+            "request": true,
+            "query_planning": true,
             "router": true,
+            "http_request": true,
             "execution": true,
-            "subgraph_request": true
+            "supergraph": true,
+            "subgraph_request": true,
+            "subgraph": true
           },
           "type": "object",
           "additionalProperties": {
@@ -1816,7 +1816,6 @@
       "description": "Configuration for entity caching",
       "type": "object",
       "required": [
-        "redis",
         "subgraph"
       ],
       "properties": {
@@ -1825,13 +1824,14 @@
           "default": false,
           "type": "boolean"
         },
+        "invalidation": {
+          "description": "#/definitions/InvalidationEndpointConfig",
+          "$ref": "#/definitions/InvalidationEndpointConfig",
+          "nullable": true
+        },
         "metrics": {
           "description": "#/definitions/Metrics",
           "$ref": "#/definitions/Metrics"
-        },
-        "redis": {
-          "description": "#/definitions/RedisCache",
-          "$ref": "#/definitions/RedisCache"
         },
         "subgraph": {
           "description": "#/definitions/SubgraphConfiguration_for_Subgraph",
@@ -2292,6 +2292,17 @@
         "disabled"
       ]
     },
+    "DisplayTraceIdFormat": {
+      "anyOf": [
+        {
+          "description": "#/definitions/TraceIdFormat",
+          "$ref": "#/definitions/TraceIdFormat"
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
     "Enabled": {
       "type": "string",
       "enum": [
@@ -2705,8 +2716,8 @@
           "type": "boolean"
         },
         "format": {
-          "description": "#/definitions/TraceIdFormat2",
-          "$ref": "#/definitions/TraceIdFormat2"
+          "description": "#/definitions/TraceIdFormat",
+          "$ref": "#/definitions/TraceIdFormat"
         },
         "header_name": {
           "description": "Choose the header name to expose trace_id (default: apollo-trace-id)",
@@ -3696,6 +3707,24 @@
       },
       "additionalProperties": false
     },
+    "InvalidationEndpointConfig": {
+      "type": "object",
+      "required": [
+        "listen",
+        "path"
+      ],
+      "properties": {
+        "listen": {
+          "description": "#/definitions/ListenAddr",
+          "$ref": "#/definitions/ListenAddr"
+        },
+        "path": {
+          "description": "Specify on which path you want to listen for invalidation endpoint.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "JWTConf": {
       "type": "object",
       "required": [
@@ -4462,7 +4491,7 @@
       "description": "Query planner modes.",
       "oneOf": [
         {
-          "description": "Use the new Rust-based implementation.",
+          "description": "Use the new Rust-based implementation.\n\nRaises an error at Router startup if the the new planner does not support the schema (such as using legacy Apollo Federation 1)",
           "type": "string",
           "enum": [
             "new"
@@ -4476,10 +4505,17 @@
           ]
         },
         {
-          "description": "Use Rust-based and Javascript-based implementations side by side, logging warnings if the implementations disagree.",
+          "description": "Use primarily the Javascript-based implementation, but also schedule background jobs to run the Rust implementation and compare results, logging warnings if the implementations disagree.\n\nRaises an error at Router startup if the the new planner does not support the schema (such as using legacy Apollo Federation 1)",
           "type": "string",
           "enum": [
             "both"
+          ]
+        },
+        {
+          "description": "Use primarily the Javascript-based implementation, but also schedule on a best-effort basis background jobs to run the Rust implementation and compare results, logging warnings if the implementations disagree.\n\nFalls back to `legacy` with a warning if the the new planner does not support the schema (such as using legacy Apollo Federation 1)",
+          "type": "string",
+          "enum": [
+            "both_best_effort"
           ]
         }
       ]
@@ -4697,6 +4733,10 @@
         "header_name"
       ],
       "properties": {
+        "format": {
+          "description": "#/definitions/TraceIdFormat",
+          "$ref": "#/definitions/TraceIdFormat"
+        },
         "header_name": {
           "description": "Choose the header name to expose trace_id (default: apollo-trace-id)",
           "type": "string"
@@ -5650,12 +5690,23 @@
       "properties": {
         "enabled": {
           "description": "activates caching for this subgraph, overrides the global configuration",
-          "type": "boolean",
+          "default": true,
+          "type": "boolean"
+        },
+        "invalidation": {
+          "description": "#/definitions/SubgraphInvalidationConfig",
+          "$ref": "#/definitions/SubgraphInvalidationConfig",
           "nullable": true
         },
         "private_id": {
           "description": "Context key used to separate cache sections per user",
+          "default": null,
           "type": "string",
+          "nullable": true
+        },
+        "redis": {
+          "description": "#/definitions/RedisCache",
+          "$ref": "#/definitions/RedisCache",
           "nullable": true
         },
         "ttl": {
@@ -5853,6 +5904,22 @@
         "http.client.response.body.size": {
           "description": "#/definitions/DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::attributes::SubgraphAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector",
           "$ref": "#/definitions/DefaultedStandardInstrument_for_extendable_attribute_apollo_router::plugins::telemetry::config_new::attributes::SubgraphAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SubgraphInvalidationConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enable the invalidation",
+          "default": false,
+          "type": "boolean"
+        },
+        "shared_key": {
+          "description": "Shared key needed to request the invalidation endpoint",
+          "default": "",
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -7163,28 +7230,17 @@
     "TraceIdFormat": {
       "oneOf": [
         {
-          "description": "Open Telemetry trace ID, a hex string.",
-          "type": "string",
-          "enum": [
-            "open_telemetry"
-          ]
-        },
-        {
-          "description": "Datadog trace ID, a u64.",
-          "type": "string",
-          "enum": [
-            "datadog"
-          ]
-        }
-      ]
-    },
-    "TraceIdFormat2": {
-      "oneOf": [
-        {
           "description": "Format the Trace ID as a hexadecimal number\n\n(e.g. Trace ID 16 -> 00000000000000000000000000000010)",
           "type": "string",
           "enum": [
             "hexadecimal"
+          ]
+        },
+        {
+          "description": "Format the Trace ID as a hexadecimal number\n\n(e.g. Trace ID 16 -> 00000000000000000000000000000010)",
+          "type": "string",
+          "enum": [
+            "open_telemetry"
           ]
         },
         {
@@ -7199,6 +7255,13 @@
           "type": "string",
           "enum": [
             "datadog"
+          ]
+        },
+        {
+          "description": "UUID format with dashes (eg. 67e55044-10b1-426f-9247-bb680e5fe0c8)",
+          "type": "string",
+          "enum": [
+            "uuid"
           ]
         }
       ]
@@ -8151,9 +8214,8 @@
                   "type": "boolean"
                 },
                 "display_trace_id": {
-                  "description": "Include the trace id (if any) with the log event. (default: true)",
-                  "default": true,
-                  "type": "boolean"
+                  "description": "#/definitions/DisplayTraceIdFormat",
+                  "$ref": "#/definitions/DisplayTraceIdFormat"
                 }
               },
               "additionalProperties": false
@@ -8249,9 +8311,8 @@
                   "type": "boolean"
                 },
                 "display_trace_id": {
-                  "description": "Include the trace id (if any) with the log event. (default: false)",
-                  "default": false,
-                  "type": "boolean"
+                  "description": "#/definitions/DisplayTraceIdFormat",
+                  "$ref": "#/definitions/DisplayTraceIdFormat"
                 }
               },
               "additionalProperties": false
