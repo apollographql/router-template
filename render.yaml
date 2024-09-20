@@ -6,9 +6,9 @@ services:
     plan: free
     envVars:
       - key: APOLLO_GRAPH_REF
-        sync: true
+        sync: false
       - key: APOLLO_KEY
-        sync: true
+        sync: false
     region: oregon
     dockerContext: .
     dockerfilePath: ./Dockerfile
