@@ -38,5 +38,3 @@ A starting point for deploying the Router via a Dockerfile using [GraphOS Enterp
 
 [GraphOS Enterprise]: https://www.apollographql.com/docs/graphos/enterprise
 [Rover]: https://www.apollographql.com/docs/rover/commands/dev
-
-service:Spotify-tb7du2:R2pmWRKslA3ZeuQu2Hslgg
