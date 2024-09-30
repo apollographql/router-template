@@ -28,6 +28,7 @@ A starting point for deploying the Router via a Dockerfile using [GraphOS Enterp
 ## Commands
 
 - `docker build -t router .` builds the router image with the tag `router` for local testing.
+  - You can use the `--build-arg APOLLO_ROUTER_VERSION=v1.55.0` to set the version of the Apollo Router docker image you want to use.
 - `rover dev --supergraph-config supergraph.yaml --router-config router.yaml` to run the Router locally without Docker (using [Rover]). You'll need to update the `supergraph.yaml` file to point at the local versions of your subgraphs. **Make sure to set the required environment variables ahead of time!**
 - `docker run -it --env APOLLO_KEY --env APOLLO_GRAPH_REF -p4000:4000 router` runs the same router image you'll run in production. You can now query the router at `http://localhost:4000`.
     - Make sure to set the env vars `APOLLO_KEY` and `APOLLO_GRAPH_REF` first
@@ -37,3 +38,5 @@ A starting point for deploying the Router via a Dockerfile using [GraphOS Enterp
 
 [GraphOS Enterprise]: https://www.apollographql.com/docs/graphos/enterprise
 [Rover]: https://www.apollographql.com/docs/rover/commands/dev
+
+service:Spotify-tb7du2:R2pmWRKslA3ZeuQu2Hslgg
