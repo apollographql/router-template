@@ -21,6 +21,7 @@ A starting point for deploying the Router via a Dockerfile using [GraphOS Enterp
 
 - [ ] Deploy to your environment of choice and set up CI/CD to deploy newer versions.
   - [ ] [Set `APOLLO_KEY` and `APOLLO_GRAPH_REF` secrets in deploy](https://www.apollographql.com/docs/router/configuration/overview/#environment-variables)
+  - [ ] *(Optional)* - Delete irrelevant cloud provider config files (i.e. if deploying to Railway, you can delete the `render.yaml` file)
 - [ ] Enable Renovate on this repo to keep Router up to date
 - [ ] Set up a deployment preview for PRs to changes which you can run integration tests against
 - [ ] Set up secrets for each of your subgraphs so that only the routers can access them
