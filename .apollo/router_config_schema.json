@@ -671,6 +671,11 @@
     "Client": {
       "type": "object",
       "properties": {
+        "dns_resolution_strategy": {
+          "description": "#/definitions/DnsResolutionStrategy",
+          "$ref": "#/definitions/DnsResolutionStrategy",
+          "nullable": true
+        },
         "experimental_http2": {
           "description": "#/definitions/Http2Config",
           "$ref": "#/definitions/Http2Config",
@@ -1421,6 +1426,20 @@
       "description": "Configuration for operation limits, parser limits, HTTP limits, etc.",
       "type": "object",
       "properties": {
+        "http1_max_request_buf_size": {
+          "description": "Limit the maximum buffer size for the HTTP1 connection.\n\nDefault is ~400kib.",
+          "default": null,
+          "type": "string",
+          "nullable": true
+        },
+        "http1_max_request_headers": {
+          "description": "Limit the maximum number of headers of incoming HTTP1 requests. Default is 100.\n\nIf router receives more headers than the buffer size, it responds to the client with \"431 Request Header Fields Too Large\".",
+          "default": null,
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0,
+          "nullable": true
+        },
         "http_max_request_bytes": {
           "description": "Limit the size of incoming HTTP requests read from the network, to protect against running out of memory. Default: 2000000 (2 MB)",
           "default": 2000000,
@@ -1646,15 +1665,15 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request` and `http_request`.",
           "default": {
-            "request": true,
-            "subgraph_request": true,
             "subgraph": true,
-            "parse_query": true,
-            "supergraph": true,
-            "http_request": true,
-            "execution": true,
             "router": true,
-            "query_planning": true
+            "supergraph": true,
+            "execution": true,
+            "http_request": true,
+            "query_planning": true,
+            "subgraph_request": true,
+            "request": true,
+            "parse_query": true
           },
           "type": "object",
           "additionalProperties": {
@@ -1790,6 +1809,11 @@
       "properties": {
         "enabled": {
           "description": "Enable or disable the entity caching feature",
+          "default": false,
+          "type": "boolean"
+        },
+        "expose_keys_in_context": {
+          "description": "Expose cache keys in context",
           "default": false,
           "type": "boolean"
         },
@@ -2269,6 +2293,45 @@
         },
         {
           "type": "boolean"
+        }
+      ]
+    },
+    "DnsResolutionStrategy": {
+      "oneOf": [
+        {
+          "description": "Only query for `A` (IPv4) records",
+          "type": "string",
+          "enum": [
+            "ipv4_only"
+          ]
+        },
+        {
+          "description": "Only query for `AAAA` (IPv6) records",
+          "type": "string",
+          "enum": [
+            "ipv6_only"
+          ]
+        },
+        {
+          "description": "Query for both `A` (IPv4) and `AAAA` (IPv6) records in parallel",
+          "type": "string",
+          "enum": [
+            "ipv4_and_ipv6"
+          ]
+        },
+        {
+          "description": "Query for `AAAA` (IPv6) records first; if that fails, query for `A` (IPv4) records",
+          "type": "string",
+          "enum": [
+            "ipv6_then_ipv4"
+          ]
+        },
+        {
+          "description": "Default: Query for `A` (IPv4) records first; if that fails, query for `AAAA` (IPv6) records",
+          "type": "string",
+          "enum": [
+            "ipv4_then_ipv6"
+          ]
         }
       ]
     },
@@ -6004,6 +6067,11 @@
           "default": false,
           "type": "boolean"
         },
+        "subgraph_request_id": {
+          "description": "Send the subgraph request id",
+          "default": false,
+          "type": "boolean"
+        },
         "uri": {
           "description": "Send the subgraph URI",
           "default": false,
@@ -6043,6 +6111,11 @@
         },
         "status_code": {
           "description": "Send the http status",
+          "default": false,
+          "type": "boolean"
+        },
+        "subgraph_request_id": {
+          "description": "Send the subgraph request id",
           "default": false,
           "type": "boolean"
         }
@@ -6469,6 +6542,11 @@
           "type": "boolean",
           "nullable": true
         },
+        "dns_resolution_strategy": {
+          "description": "#/definitions/DnsResolutionStrategy",
+          "$ref": "#/definitions/DnsResolutionStrategy",
+          "nullable": true
+        },
         "experimental_http2": {
           "description": "#/definitions/Http2Config",
           "$ref": "#/definitions/Http2Config",
@@ -6619,8 +6697,8 @@
           "nullable": true
         },
         "generate_query_fragments": {
-          "description": "Enable QP generation of fragments for subgraph requests Default: false",
-          "default": false,
+          "description": "Enable QP generation of fragments for subgraph requests Default: true",
+          "default": true,
           "type": "boolean"
         },
         "introspection": {
