@@ -49,6 +49,10 @@
       "default": false,
       "type": "boolean"
     },
+    "fleet_detector": {
+      "description": "#/definitions/Conf4",
+      "$ref": "#/definitions/Conf4"
+    },
     "forbid_mutations": {
       "description": "#/definitions/ForbidMutationsConfig",
       "$ref": "#/definitions/ForbidMutationsConfig"
@@ -74,8 +78,8 @@
       "$ref": "#/definitions/Config"
     },
     "override_subgraph_url": {
-      "description": "#/definitions/Conf4",
-      "$ref": "#/definitions/Conf4"
+      "description": "#/definitions/Conf5",
+      "$ref": "#/definitions/Conf5"
     },
     "persisted_queries": {
       "description": "#/definitions/PersistedQueries",
@@ -98,8 +102,8 @@
       "$ref": "#/definitions/Config8"
     },
     "rhai": {
-      "description": "#/definitions/Conf5",
-      "$ref": "#/definitions/Conf5"
+      "description": "#/definitions/Conf6",
+      "$ref": "#/definitions/Conf6"
     },
     "sandbox": {
       "description": "#/definitions/Sandbox",
@@ -114,8 +118,8 @@
       "$ref": "#/definitions/Supergraph"
     },
     "telemetry": {
-      "description": "#/definitions/Conf6",
-      "$ref": "#/definitions/Conf6"
+      "description": "#/definitions/Conf7",
+      "$ref": "#/definitions/Conf7"
     },
     "tls": {
       "description": "#/definitions/Tls",
@@ -1375,6 +1379,9 @@
       "additionalProperties": false
     },
     "Conf4": {
+      "type": "object"
+    },
+    "Conf5": {
       "description": "Subgraph URL mappings",
       "anyOf": [
         {
@@ -1386,7 +1393,7 @@
         }
       ]
     },
-    "Conf5": {
+    "Conf6": {
       "description": "Configuration for the Rhai Plugin",
       "type": "object",
       "properties": {
@@ -1403,7 +1410,7 @@
       },
       "additionalProperties": false
     },
-    "Conf6": {
+    "Conf7": {
       "description": "Telemetry configuration",
       "type": "object",
       "properties": {
@@ -1665,15 +1672,15 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request` and `http_request`.",
           "default": {
-            "http_request": true,
-            "execution": true,
-            "router": true,
-            "subgraph": true,
-            "supergraph": true,
-            "parse_query": true,
-            "query_planning": true,
             "request": true,
-            "subgraph_request": true
+            "parse_query": true,
+            "router": true,
+            "subgraph_request": true,
+            "http_request": true,
+            "supergraph": true,
+            "query_planning": true,
+            "execution": true,
+            "subgraph": true
           },
           "type": "object",
           "additionalProperties": {
@@ -1852,7 +1859,7 @@
           "minimum": 1.0
         },
         "client_name_header": {
-          "description": "The name of the header to extract from requests when populating 'client nane' for traces and metrics in Apollo Studio.",
+          "description": "The name of the header to extract from requests when populating 'client name' for traces and metrics in Apollo Studio.",
           "default": "apollographql-client-name",
           "type": "string",
           "nullable": true
@@ -4581,6 +4588,13 @@
           "enum": [
             "both_best_effort"
           ]
+        },
+        {
+          "description": "Use the new Rust-based implementation but fall back to the legacy one for supergraph schemas composed with legacy Apollo Federation 1.",
+          "type": "string",
+          "enum": [
+            "new_best_effort"
+          ]
         }
       ]
     },
@@ -5814,6 +5828,11 @@
     "SubgraphAttributes": {
       "type": "object",
       "properties": {
+        "http.request.resend_count": {
+          "description": "#/definitions/StandardAttribute",
+          "$ref": "#/definitions/StandardAttribute",
+          "nullable": true
+        },
         "subgraph.graphql.document": {
           "description": "#/definitions/StandardAttribute",
           "$ref": "#/definitions/StandardAttribute",
@@ -6311,6 +6330,24 @@
         {
           "type": "object",
           "required": [
+            "subgraph_resend_count"
+          ],
+          "properties": {
+            "default": {
+              "description": "#/definitions/AttributeValue",
+              "$ref": "#/definitions/AttributeValue",
+              "nullable": true
+            },
+            "subgraph_resend_count": {
+              "description": "The subgraph http resend count",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
             "supergraph_operation_name"
           ],
           "properties": {
@@ -6691,7 +6728,7 @@
           "type": "boolean"
         },
         "experimental_reuse_query_fragments": {
-          "description": "Enable reuse of query fragments Default: depends on the federation version",
+          "description": "Enable reuse of query fragments This feature is deprecated and will be removed in next release. The config can only be set when the legacy query planner is explicitly enabled.",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -7807,6 +7844,11 @@
     "extendable_attribute_apollo_router::plugins::telemetry::config_new::attributes::SubgraphAttributes_apollo_router::plugins::telemetry::config_new::conditional::Conditional<apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector>": {
       "type": "object",
       "properties": {
+        "http.request.resend_count": {
+          "description": "#/definitions/StandardAttribute",
+          "$ref": "#/definitions/StandardAttribute",
+          "nullable": true
+        },
         "subgraph.graphql.document": {
           "description": "#/definitions/StandardAttribute",
           "$ref": "#/definitions/StandardAttribute",
@@ -7836,6 +7878,11 @@
     "extendable_attribute_apollo_router::plugins::telemetry::config_new::attributes::SubgraphAttributes_apollo_router::plugins::telemetry::config_new::selectors::SubgraphSelector": {
       "type": "object",
       "properties": {
+        "http.request.resend_count": {
+          "description": "#/definitions/StandardAttribute",
+          "$ref": "#/definitions/StandardAttribute",
+          "nullable": true
+        },
         "subgraph.graphql.document": {
           "description": "#/definitions/StandardAttribute",
           "$ref": "#/definitions/StandardAttribute",
