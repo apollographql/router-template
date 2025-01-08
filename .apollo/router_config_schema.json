@@ -1672,14 +1672,14 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request` and `http_request`.",
           "default": {
-            "request": true,
-            "parse_query": true,
-            "router": true,
             "subgraph_request": true,
+            "router": true,
             "http_request": true,
-            "supergraph": true,
             "query_planning": true,
             "execution": true,
+            "parse_query": true,
+            "supergraph": true,
+            "request": true,
             "subgraph": true
           },
           "type": "object",
@@ -7466,6 +7466,12 @@
           "description": "Whether to use parent based sampling",
           "default": true,
           "type": "boolean"
+        },
+        "preview_datadog_agent_sampling": {
+          "description": "Use datadog agent sampling. This means that all spans will be sent to the Datadog agent and the `sampling.priority` attribute will be used to control if the span will then be sent to Datadog",
+          "default": null,
+          "type": "boolean",
+          "nullable": true
         },
         "resource": {
           "description": "The Open Telemetry resource",
