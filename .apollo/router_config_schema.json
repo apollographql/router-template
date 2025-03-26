@@ -58,8 +58,8 @@
       "$ref": "#/definitions/ForbidMutationsConfig"
     },
     "headers": {
-      "description": "#/definitions/Config6",
-      "$ref": "#/definitions/Config6"
+      "description": "#/definitions/Config7",
+      "$ref": "#/definitions/Config7"
     },
     "health_check": {
       "description": "#/definitions/Config",
@@ -70,8 +70,8 @@
       "$ref": "#/definitions/Homepage"
     },
     "include_subgraph_errors": {
-      "description": "#/definitions/Config7",
-      "$ref": "#/definitions/Config7"
+      "description": "#/definitions/Config8",
+      "$ref": "#/definitions/Config8"
     },
     "license_enforcement": {
       "description": "#/definitions/LicenseEnforcementConfig",
@@ -94,16 +94,16 @@
       "$ref": "#/definitions/Plugins"
     },
     "preview_entity_cache": {
-      "description": "#/definitions/Config8",
-      "$ref": "#/definitions/Config8"
+      "description": "#/definitions/Config9",
+      "$ref": "#/definitions/Config9"
     },
     "preview_file_uploads": {
       "description": "#/definitions/FileUploadsConfig",
       "$ref": "#/definitions/FileUploadsConfig"
     },
     "progressive_override": {
-      "description": "#/definitions/Config9",
-      "$ref": "#/definitions/Config9"
+      "description": "#/definitions/Config10",
+      "$ref": "#/definitions/Config10"
     },
     "rhai": {
       "description": "#/definitions/Conf6",
@@ -130,8 +130,8 @@
       "$ref": "#/definitions/Tls"
     },
     "traffic_shaping": {
-      "description": "#/definitions/Config15",
-      "$ref": "#/definitions/Config15"
+      "description": "#/definitions/Config16",
+      "$ref": "#/definitions/Config16"
     }
   },
   "additionalProperties": false,
@@ -446,6 +446,14 @@
           "description": "Activates Batching (disabled by default)",
           "default": false,
           "type": "boolean"
+        },
+        "maximum_size": {
+          "description": "Maximum size for a batch",
+          "default": null,
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0,
+          "nullable": true
         },
         "mode": {
           "description": "#/definitions/BatchingMode",
@@ -1339,8 +1347,8 @@
       "type": "object",
       "properties": {
         "connector": {
-          "description": "#/definitions/ConnectorConfiguration_for_AuthConfig",
-          "$ref": "#/definitions/ConnectorConfiguration_for_AuthConfig",
+          "description": "#/definitions/Config6",
+          "$ref": "#/definitions/Config6",
           "nullable": true
         },
         "router": {
@@ -1451,8 +1459,8 @@
       "type": "object",
       "properties": {
         "apollo": {
-          "description": "#/definitions/Config10",
-          "$ref": "#/definitions/Config10"
+          "description": "#/definitions/Config11",
+          "$ref": "#/definitions/Config11"
         },
         "exporters": {
           "description": "#/definitions/Exporters",
@@ -1491,6 +1499,10 @@
       "additionalProperties": false
     },
     "Config10": {
+      "description": "Configuration for the progressive override plugin",
+      "type": "object"
+    },
+    "Config11": {
       "type": "object",
       "properties": {
         "batch_processor": {
@@ -1566,7 +1578,7 @@
       },
       "additionalProperties": false
     },
-    "Config11": {
+    "Config12": {
       "type": "object",
       "required": [
         "enabled"
@@ -1603,7 +1615,7 @@
       },
       "additionalProperties": false
     },
-    "Config12": {
+    "Config13": {
       "description": "Prometheus configuration",
       "type": "object",
       "properties": {
@@ -1624,7 +1636,7 @@
       },
       "additionalProperties": false
     },
-    "Config13": {
+    "Config14": {
       "type": "object",
       "required": [
         "enabled"
@@ -1645,7 +1657,7 @@
       },
       "additionalProperties": false
     },
-    "Config14": {
+    "Config15": {
       "type": "object",
       "required": [
         "enabled"
@@ -1684,17 +1696,17 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request`, `connect`, `connect_request` and `http_request`.",
           "default": {
-            "connect": true,
             "subgraph": true,
-            "request": true,
-            "query_planning": true,
-            "connect_request": true,
             "subgraph_request": true,
+            "parse_query": true,
+            "router": true,
+            "request": true,
             "supergraph": true,
             "http_request": true,
-            "router": true,
+            "query_planning": true,
             "execution": true,
-            "parse_query": true
+            "connect_request": true,
+            "connect": true
           },
           "type": "object",
           "additionalProperties": {
@@ -1704,7 +1716,7 @@
       },
       "additionalProperties": false
     },
-    "Config15": {
+    "Config16": {
       "description": "Configuration for the experimental traffic shaping plugin",
       "type": "object",
       "properties": {
@@ -1712,6 +1724,10 @@
           "description": "#/definitions/SubgraphShaping",
           "$ref": "#/definitions/SubgraphShaping",
           "nullable": true
+        },
+        "connector": {
+          "description": "#/definitions/ConnectorsShapingConfig",
+          "$ref": "#/definitions/ConnectorsShapingConfig"
         },
         "deduplicate_variables": {
           "description": "DEPRECATED, now always enabled: Enable variable deduplication optimization when sending requests to subgraphs (https://github.com/apollographql/router/issues/87)",
@@ -1867,6 +1883,22 @@
       "additionalProperties": false
     },
     "Config6": {
+      "description": "Configure connector authentication",
+      "type": "object",
+      "properties": {
+        "sources": {
+          "description": "Create a configuration that will apply only to a specific source.",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "description": "#/definitions/AuthConfig",
+            "$ref": "#/definitions/AuthConfig"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Config7": {
       "description": "Configuration for header propagation",
       "type": "object",
       "properties": {
@@ -1886,7 +1918,7 @@
       },
       "additionalProperties": false
     },
-    "Config7": {
+    "Config8": {
       "description": "Configuration for exposing errors that originate from subgraphs",
       "type": "object",
       "properties": {
@@ -1906,7 +1938,7 @@
       },
       "additionalProperties": false
     },
-    "Config8": {
+    "Config9": {
       "description": "Configuration for entity caching",
       "type": "object",
       "required": [
@@ -1939,10 +1971,6 @@
       },
       "additionalProperties": false
     },
-    "Config9": {
-      "description": "Configuration for the progressive override plugin",
-      "type": "object"
-    },
     "ConnectorAttributes": {
       "type": "object",
       "properties": {
@@ -1969,16 +1997,20 @@
       },
       "additionalProperties": false
     },
-    "ConnectorConfiguration_for_AuthConfig": {
+    "ConnectorConfiguration_for_TlsClient": {
       "type": "object",
       "properties": {
+        "all": {
+          "description": "#/definitions/TlsClient",
+          "$ref": "#/definitions/TlsClient"
+        },
         "sources": {
           "description": "Map of subgraph_name.connector_source_name to configuration",
           "default": {},
           "type": "object",
           "additionalProperties": {
-            "description": "#/definitions/AuthConfig",
-            "$ref": "#/definitions/AuthConfig"
+            "description": "#/definitions/TlsClient",
+            "$ref": "#/definitions/TlsClient"
           }
         }
       }
@@ -2176,6 +2208,37 @@
         }
       ]
     },
+    "ConnectorShaping": {
+      "type": "object",
+      "properties": {
+        "compression": {
+          "description": "#/definitions/Compression",
+          "$ref": "#/definitions/Compression",
+          "nullable": true
+        },
+        "dns_resolution_strategy": {
+          "description": "#/definitions/DnsResolutionStrategy",
+          "$ref": "#/definitions/DnsResolutionStrategy",
+          "nullable": true
+        },
+        "experimental_http2": {
+          "description": "#/definitions/Http2Config",
+          "$ref": "#/definitions/Http2Config",
+          "nullable": true
+        },
+        "global_rate_limit": {
+          "description": "#/definitions/RateLimitConf",
+          "$ref": "#/definitions/RateLimitConf",
+          "nullable": true
+        },
+        "timeout": {
+          "description": "Enable timeout for connectors requests",
+          "default": null,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "ConnectorSource": {
       "oneOf": [
         {
@@ -2247,6 +2310,25 @@
           "additionalProperties": {
             "description": "#/definitions/SubgraphConnectorConfiguration",
             "$ref": "#/definitions/SubgraphConnectorConfiguration"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "ConnectorsShapingConfig": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "description": "#/definitions/ConnectorShaping",
+          "$ref": "#/definitions/ConnectorShaping",
+          "nullable": true
+        },
+        "sources": {
+          "description": "Applied on specific connector sources",
+          "type": "object",
+          "additionalProperties": {
+            "description": "#/definitions/ConnectorShaping",
+            "$ref": "#/definitions/ConnectorShaping"
           }
         }
       },
@@ -2725,6 +2807,10 @@
           "default": true,
           "type": "boolean"
         },
+        "redaction_policy": {
+          "description": "#/definitions/ErrorRedactionPolicy",
+          "$ref": "#/definitions/ErrorRedactionPolicy"
+        },
         "send": {
           "description": "Send subgraph errors to Apollo Studio",
           "default": true,
@@ -2758,6 +2844,25 @@
         }
       ]
     },
+    "ErrorRedactionPolicy": {
+      "description": "Allow some error fields to be send to Apollo Studio even when `redact` is true.",
+      "oneOf": [
+        {
+          "description": "Applies redaction to all error details.",
+          "type": "string",
+          "enum": [
+            "strict"
+          ]
+        },
+        {
+          "description": "Modifies the `redact` setting by excluding the `extensions.code` field in errors from redaction.",
+          "type": "string",
+          "enum": [
+            "extended"
+          ]
+        }
+      ]
+    },
     "ErrorRepr": {
       "oneOf": [
         {
@@ -2772,9 +2877,9 @@
     "ErrorsConfiguration": {
       "type": "object",
       "properties": {
-        "experimental_otlp_error_metrics": {
-          "description": "#/definitions/OtlpErrorMetricsMode",
-          "$ref": "#/definitions/OtlpErrorMetricsMode"
+        "preview_extended_error_metrics": {
+          "description": "#/definitions/ExtendedErrorMetricsMode",
+          "$ref": "#/definitions/ExtendedErrorMetricsMode"
         },
         "subgraph": {
           "description": "#/definitions/SubgraphErrorConfig",
@@ -3126,6 +3231,25 @@
         }
       },
       "additionalProperties": false
+    },
+    "ExtendedErrorMetricsMode": {
+      "description": "Extended Open Telemetry error metrics mode",
+      "oneOf": [
+        {
+          "description": "Do not send extended OTLP error metrics",
+          "type": "string",
+          "enum": [
+            "disabled"
+          ]
+        },
+        {
+          "description": "Send extended OTLP error metrics to Apollo Studio with additional dimensions [`extensions.service`, `extensions.code`]. If enabled, it's also recommended to enable `redaction_policy: extended` on subgraphs to send the `extensions.code` for subgraph errors.",
+          "type": "string",
+          "enum": [
+            "enabled"
+          ]
+        }
+      ]
     },
     "FieldName": {
       "oneOf": [
@@ -4035,6 +4159,10 @@
             "$ref": "#/definitions/JwksConf"
           }
         },
+        "on_error": {
+          "description": "#/definitions/OnError",
+          "$ref": "#/definitions/OnError"
+        },
         "sources": {
           "description": "Alternative sources to extract the JWT",
           "type": "array",
@@ -4270,12 +4398,12 @@
           "$ref": "#/definitions/MetricsCommon"
         },
         "otlp": {
-          "description": "#/definitions/Config11",
-          "$ref": "#/definitions/Config11"
-        },
-        "prometheus": {
           "description": "#/definitions/Config12",
           "$ref": "#/definitions/Config12"
+        },
+        "prometheus": {
+          "description": "#/definitions/Config13",
+          "$ref": "#/definitions/Config13"
         }
       },
       "additionalProperties": false
@@ -4433,6 +4561,13 @@
         }
       ]
     },
+    "OnError": {
+      "type": "string",
+      "enum": [
+        "Continue",
+        "Error"
+      ]
+    },
     "Operation": {
       "oneOf": [
         {
@@ -4505,25 +4640,6 @@
         }
       ]
     },
-    "OtlpErrorMetricsMode": {
-      "description": "Open Telemetry error metrics mode",
-      "oneOf": [
-        {
-          "description": "Do not store OTLP error metrics",
-          "type": "string",
-          "enum": [
-            "disabled"
-          ]
-        },
-        {
-          "description": "Send OTLP error metrics to Apollo Studio",
-          "type": "string",
-          "enum": [
-            "enabled"
-          ]
-        }
-      ]
-    },
     "PersistedQueries": {
       "description": "Persisted Queries (PQ) configuration",
       "type": "object",
@@ -4536,6 +4652,11 @@
         "experimental_prewarm_query_plan_cache": {
           "description": "#/definitions/PersistedQueriesPrewarmQueryPlanCache",
           "$ref": "#/definitions/PersistedQueriesPrewarmQueryPlanCache"
+        },
+        "hot_reload": {
+          "description": "Enables hot reloading of the local persisted query manifests",
+          "default": false,
+          "type": "boolean"
         },
         "local_manifests": {
           "description": "Enables using a local copy of the persisted query manifest to safelist operations",
@@ -7546,6 +7667,10 @@
       "description": "TLS related configuration options.",
       "type": "object",
       "properties": {
+        "connector": {
+          "description": "#/definitions/ConnectorConfiguration_for_TlsClient",
+          "$ref": "#/definitions/ConnectorConfiguration_for_TlsClient"
+        },
         "subgraph": {
           "description": "#/definitions/SubgraphConfiguration_for_TlsClient",
           "$ref": "#/definitions/SubgraphConfiguration_for_TlsClient"
@@ -7672,24 +7797,24 @@
           "$ref": "#/definitions/TracingCommon"
         },
         "datadog": {
-          "description": "#/definitions/Config14",
-          "$ref": "#/definitions/Config14"
+          "description": "#/definitions/Config15",
+          "$ref": "#/definitions/Config15"
         },
         "experimental_response_trace_id": {
           "description": "#/definitions/ExposeTraceId",
           "$ref": "#/definitions/ExposeTraceId"
         },
         "otlp": {
-          "description": "#/definitions/Config11",
-          "$ref": "#/definitions/Config11"
+          "description": "#/definitions/Config12",
+          "$ref": "#/definitions/Config12"
         },
         "propagation": {
           "description": "#/definitions/Propagation",
           "$ref": "#/definitions/Propagation"
         },
         "zipkin": {
-          "description": "#/definitions/Config13",
-          "$ref": "#/definitions/Config13"
+          "description": "#/definitions/Config14",
+          "$ref": "#/definitions/Config14"
         }
       },
       "additionalProperties": false
