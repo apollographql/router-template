@@ -146,6 +146,15 @@
       "$ref": "#/definitions/Config18"
     }
   },
+  "patternProperties": {
+    "^experimental_mock_subgraphs$": {
+      "type": "object",
+      "additionalProperties": {
+        "description": "#/definitions/SubgraphConfig",
+        "$ref": "#/definitions/SubgraphConfig"
+      }
+    }
+  },
   "additionalProperties": false,
   "definitions": {
     "AWSSigV4Config": {
@@ -1523,8 +1532,8 @@
           "default": {},
           "type": "object",
           "additionalProperties": {
-            "description": "#/definitions/SubgraphConfig",
-            "$ref": "#/definitions/SubgraphConfig"
+            "description": "#/definitions/SubgraphConfig2",
+            "$ref": "#/definitions/SubgraphConfig2"
           }
         }
       },
@@ -1761,17 +1770,17 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request`, `connect`, `connect_request` and `http_request`.",
           "default": {
-            "subgraph": true,
-            "parse_query": true,
+            "http_request": true,
             "query_planning": true,
-            "subgraph_request": true,
-            "connect_request": true,
             "request": true,
-            "router": true,
+            "parse_query": true,
             "supergraph": true,
+            "router": true,
+            "connect_request": true,
+            "subgraph_request": true,
             "execution": true,
-            "connect": true,
-            "http_request": true
+            "subgraph": true,
+            "connect": true
           },
           "type": "object",
           "additionalProperties": {
@@ -2335,7 +2344,14 @@
           "nullable": true
         },
         "preview_connect_v0_2": {
-          "description": "Feature gate for connect spec v0.2. Set to `true` to enable the using the v0.2 spec during the preview phase.",
+          "description": "Enables Connect spec v0.2 during the preview.",
+          "default": null,
+          "deprecated": true,
+          "type": "boolean",
+          "nullable": true
+        },
+        "preview_connect_v0_3": {
+          "description": "Feature gate for Connect spec v0.3. Set to `true` to enable the using the v0.3 spec during the preview phase.",
           "default": null,
           "type": "boolean",
           "nullable": true
@@ -2495,6 +2511,27 @@
           ]
         }
       ]
+    },
+    "DeduplicationConfig": {
+      "description": "Subscription deduplication configuration",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enable subgraph subscription deduplication. When enabled, multiple identical requests to the same subgraph will share one WebSocket connection in passthrough mode. (default: true)",
+          "default": true,
+          "type": "boolean"
+        },
+        "ignored_headers": {
+          "description": "List of headers to ignore for deduplication. Even if these headers are different, the subscription request is considered identical. For example, if you forward the \"User-Agent\" header, but the subgraph doesn't depend on the value of that header, adding it to this list will let the router dedupe subgraph subscriptions even if the header value is different.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
     },
     "DefaultAttributeRequirementLevel": {
       "oneOf": [
@@ -5594,157 +5631,6 @@
     "RouterSelector": {
       "anyOf": [
         {
-          "description": "A header from the request",
-          "type": "object",
-          "required": [
-            "request_header"
-          ],
-          "properties": {
-            "default": {
-              "description": "#/definitions/AttributeValue",
-              "$ref": "#/definitions/AttributeValue",
-              "nullable": true
-            },
-            "request_header": {
-              "description": "The name of the request header.",
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "The request method.",
-          "type": "object",
-          "required": [
-            "request_method"
-          ],
-          "properties": {
-            "request_method": {
-              "description": "The request method enabled or not",
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "A value from context.",
-          "type": "object",
-          "required": [
-            "request_context"
-          ],
-          "properties": {
-            "default": {
-              "description": "#/definitions/AttributeValue",
-              "$ref": "#/definitions/AttributeValue",
-              "nullable": true
-            },
-            "request_context": {
-              "description": "The request context key.",
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "A header from the response",
-          "type": "object",
-          "required": [
-            "response_header"
-          ],
-          "properties": {
-            "default": {
-              "description": "#/definitions/AttributeValue",
-              "$ref": "#/definitions/AttributeValue",
-              "nullable": true
-            },
-            "response_header": {
-              "description": "The name of the request header.",
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "A status from the response",
-          "type": "object",
-          "required": [
-            "response_status"
-          ],
-          "properties": {
-            "response_status": {
-              "description": "#/definitions/ResponseStatus",
-              "$ref": "#/definitions/ResponseStatus"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "The trace ID of the request.",
-          "type": "object",
-          "required": [
-            "trace_id"
-          ],
-          "properties": {
-            "trace_id": {
-              "description": "#/definitions/TraceIdFormat",
-              "$ref": "#/definitions/TraceIdFormat"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "Apollo Studio operation id",
-          "type": "object",
-          "required": [
-            "studio_operation_id"
-          ],
-          "properties": {
-            "studio_operation_id": {
-              "description": "Apollo Studio operation id",
-              "type": "boolean"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "A value from context.",
-          "type": "object",
-          "required": [
-            "response_context"
-          ],
-          "properties": {
-            "default": {
-              "description": "#/definitions/AttributeValue",
-              "$ref": "#/definitions/AttributeValue",
-              "nullable": true
-            },
-            "response_context": {
-              "description": "The response context key.",
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
-          "description": "The operation name from the query.",
-          "type": "object",
-          "required": [
-            "operation_name"
-          ],
-          "properties": {
-            "default": {
-              "description": "Optional default value.",
-              "type": "string",
-              "nullable": true
-            },
-            "operation_name": {
-              "description": "#/definitions/OperationName",
-              "$ref": "#/definitions/OperationName"
-            }
-          },
-          "additionalProperties": false
-        },
-        {
           "description": "A value from baggage.",
           "type": "object",
           "required": [
@@ -5783,6 +5669,170 @@
           "additionalProperties": false
         },
         {
+          "description": "Critical error if it happens",
+          "type": "object",
+          "required": [
+            "error"
+          ],
+          "properties": {
+            "error": {
+              "description": "#/definitions/ErrorRepr",
+              "$ref": "#/definitions/ErrorRepr"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Boolean set to true if the response body contains graphql error",
+          "type": "object",
+          "required": [
+            "on_graphql_error"
+          ],
+          "properties": {
+            "on_graphql_error": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "The operation name from the query.",
+          "type": "object",
+          "required": [
+            "operation_name"
+          ],
+          "properties": {
+            "default": {
+              "description": "Optional default value.",
+              "type": "string",
+              "nullable": true
+            },
+            "operation_name": {
+              "description": "#/definitions/OperationName",
+              "$ref": "#/definitions/OperationName"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "A header from the request",
+          "type": "object",
+          "required": [
+            "request_header"
+          ],
+          "properties": {
+            "default": {
+              "description": "#/definitions/AttributeValue",
+              "$ref": "#/definitions/AttributeValue",
+              "nullable": true
+            },
+            "request_header": {
+              "description": "The name of the request header.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "A value from context.",
+          "type": "object",
+          "required": [
+            "request_context"
+          ],
+          "properties": {
+            "default": {
+              "description": "#/definitions/AttributeValue",
+              "$ref": "#/definitions/AttributeValue",
+              "nullable": true
+            },
+            "request_context": {
+              "description": "The request context key.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "The request method.",
+          "type": "object",
+          "required": [
+            "request_method"
+          ],
+          "properties": {
+            "request_method": {
+              "description": "The request method enabled or not",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "The body of the response",
+          "type": "object",
+          "required": [
+            "response_body"
+          ],
+          "properties": {
+            "response_body": {
+              "description": "The response body enabled or not",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "A header from the response",
+          "type": "object",
+          "required": [
+            "response_header"
+          ],
+          "properties": {
+            "default": {
+              "description": "#/definitions/AttributeValue",
+              "$ref": "#/definitions/AttributeValue",
+              "nullable": true
+            },
+            "response_header": {
+              "description": "The name of the request header.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "A value from context.",
+          "type": "object",
+          "required": [
+            "response_context"
+          ],
+          "properties": {
+            "default": {
+              "description": "#/definitions/AttributeValue",
+              "$ref": "#/definitions/AttributeValue",
+              "nullable": true
+            },
+            "response_context": {
+              "description": "The response context key.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "A status from the response",
+          "type": "object",
+          "required": [
+            "response_status"
+          ],
+          "properties": {
+            "response_status": {
+              "description": "#/definitions/ResponseStatus",
+              "$ref": "#/definitions/ResponseStatus"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
           "description": "Deprecated, should not be used anymore, use static field instead",
           "type": "string"
         },
@@ -5800,27 +5850,29 @@
           "additionalProperties": false
         },
         {
+          "description": "Apollo Studio operation id",
           "type": "object",
           "required": [
-            "on_graphql_error"
+            "studio_operation_id"
           ],
           "properties": {
-            "on_graphql_error": {
-              "description": "Boolean set to true if the response body contains graphql error",
+            "studio_operation_id": {
+              "description": "Apollo Studio operation id",
               "type": "boolean"
             }
           },
           "additionalProperties": false
         },
         {
+          "description": "The trace ID of the request.",
           "type": "object",
           "required": [
-            "error"
+            "trace_id"
           ],
           "properties": {
-            "error": {
-              "description": "#/definitions/ErrorRepr",
-              "$ref": "#/definitions/ErrorRepr"
+            "trace_id": {
+              "description": "#/definitions/TraceIdFormat",
+              "$ref": "#/definitions/TraceIdFormat"
             }
           },
           "additionalProperties": false
@@ -6409,6 +6461,41 @@
       "additionalProperties": false
     },
     "SubgraphConfig": {
+      "description": "Configuration for one subgraph for the `mock_subgraphs` plugin",
+      "type": "object",
+      "properties": {
+        "entities": {
+          "description": "Entities that can be queried through Federation’s special `_entities` field",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "headers": {
+          "description": "HTTP headers for the subgraph response",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "mutation": {
+          "description": "Data for `mutation` operations",
+          "default": null,
+          "type": "object",
+          "additionalProperties": true,
+          "nullable": true
+        },
+        "query": {
+          "description": "Data for `query` operations (excluding the special `_entities` field)",
+          "default": {},
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "SubgraphConfig2": {
       "anyOf": [
         {
           "description": "Enable or disable error redaction for a subgraph",
@@ -7271,10 +7358,9 @@
       "description": "Subscriptions configuration",
       "type": "object",
       "properties": {
-        "enable_deduplication": {
-          "description": "Enable the deduplication of subscription (for example if we detect the exact same request to subgraph we won't open a new websocket to the subgraph in passthrough mode) (default: true)",
-          "default": true,
-          "type": "boolean"
+        "deduplication": {
+          "description": "#/definitions/DeduplicationConfig",
+          "$ref": "#/definitions/DeduplicationConfig"
         },
         "enabled": {
           "description": "Enable subscription",
