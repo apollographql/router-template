@@ -1,40 +1,143 @@
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/A-6SvK?referralCode=xsbY2R)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/apollo-router)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=github.com/apollographql/router-template)
 
-A starting point for deploying the Router via a Dockerfile using [GraphOS Enterprise].
+# Apollo Router Template
 
-> ⚠️This template requires [GraphOS Enterprise], if you'd like a similar template that does _not_ require an enterprise plan, please open a discussion and describe your use-case and requirements.
+A starting point for deploying the Apollo Router using the new runtime container. This template provides easy deployment options for **Railway**, **Render**, and **Fly.io**.
+
+> 💡 **Quick Start**: This template uses the Apollo runtime container with sensible defaults. You can deploy immediately or customize the configuration for your specific needs.
+
+## Prerequisites
+
+- A [GraphOS account](https://www.apollographql.com/docs/graphos/) (free tier available)
+- Your `APOLLO_KEY` and `APOLLO_GRAPH_REF` from GraphOS Studio
+
+## Deploy Options
+
+### Option 1: Use Railway Template (Recommended)
+For the easiest deployment experience, use the official Railway template:
+**[Deploy with Railway Template](https://railway.com/deploy/apollo-router)**
+
+### Option 2: Clone and Deploy
+For more control or to use other platforms:
+
+1. **Fork or clone this repository to your own repo**
+2. **Set up your environment variables** in your deployment platform:
+   - `APOLLO_KEY` - Your GraphOS API key
+   - `APOLLO_GRAPH_REF` - Your graph reference (e.g., `my-graph@production`)
+3. **Deploy using one of the options below**:
+
+**Railway**: Use the deploy button above or connect your repo in Railway
+
+**Render**: Use the deploy button above or connect your repo in Render
+
+**Fly.io**: 
+```bash
+flyctl launch
+flyctl secrets set APOLLO_KEY=your-key-here
+flyctl secrets set APOLLO_GRAPH_REF=your-graph-ref-here
+flyctl deploy
+```
 
 ## What's included
 
-- `router.yaml`—[configuration for the router](https://www.apollographql.com/docs/router/configuration/overview)
-- `Dockerfile`—used to build the router for deployment
-- `.apollo`—contains some JSON schemas for the config files (to make IDE experience better)
-- `.github/workflows/update-router-config.yaml`—auto-update JSON schemas when the router version changes
-- `.vscode`—contains recommended VS Code settings
-- `.idea`—contains recommended Jetbrains editor settings
-- `renovate.json`—configured to keep Router up to date
-- A **sample** `supergraph.yaml` file for testing Router via [`rover dev`][Rover]. You'll need to update this file to point at the local versions of your subgraphs.
+- `Dockerfile`—configured to use the Apollo Router runtime container
+- `render.yaml`—Render deployment configuration
+- `fly.toml`—Fly.io deployment configuration
+- `router.yaml`—sample router configuration (commented out by default)
+- `.apollo/`—JSON schemas for better IDE experience
+- `.github/workflows/`—automated dependency updates
+- `.vscode/` and `.idea`—recommended editor settings
+- `renovate.json`—keeps Router version up to date
 
-## Next steps
+## Apollo MCP Server
 
-- [ ] Deploy to your environment of choice and set up CI/CD to deploy newer versions.
-  - [ ] [Set `APOLLO_KEY` and `APOLLO_GRAPH_REF` secrets in deploy](https://www.apollographql.com/docs/router/configuration/overview/#environment-variables)
-  - [ ] _(Optional)_ - Delete irrelevant cloud provider config files (i.e. if deploying to Railway, you can delete the `render.yaml` file)
-- [ ] Enable Renovate on this repo to keep Router up to date
-- [ ] Set up a deployment preview for PRs to changes which you can run integration tests against
-- [ ] Set up secrets for each of your subgraphs so that only the routers can access them
-- [ ] Disable subgraph error inclusion, sandbox, and introspection in `router.yaml` once you have everything working (you probably don't want those enabled in production)
+The Apollo Router includes an optional MCP (Model Context Protocol) server that is disabled by default. This server provides AI assistants with structured access to your GraphQL schema and operations.
 
-## Commands
+### Enabling MCP Server
 
-- `docker build -t router .` builds the router image with the tag `router` for local testing.
-- `rover dev --supergraph-config supergraph.yaml --router-config router.yaml` to run the Router locally without Docker (using [Rover]). You'll need to update the `supergraph.yaml` file to point at the local versions of your subgraphs. **Make sure to set the required environment variables ahead of time!**
-  - You can add the `--graph-ref` option to your `rover dev` command if you want to develop off of your current variant's state in GraphOS
-- `docker run -it --env APOLLO_KEY --env APOLLO_GRAPH_REF -p4000:4000 router` runs the same router image you'll run in production. You can now query the router at `http://localhost:4000`.
-  - Make sure to set the env vars `APOLLO_KEY` and `APOLLO_GRAPH_REF` first
-  - You can alternatively create a file (e.g., `.env`) and run `docker run -it --env-file .env -p4000:4000 router`. **Make sure not to check this file into source control!**
-  - Your local router will need network access to the subgraphs
+To enable the MCP server, set the `MCP_ENABLE` environment variable to `1`:
 
-[GraphOS Enterprise]: https://www.apollographql.com/docs/graphos/enterprise
-[Rover]: https://www.apollographql.com/docs/rover/commands/dev
+**Local development:**
+```bash
+docker run -it --env APOLLO_KEY=your-key --env APOLLO_GRAPH_REF=your-graph-ref --env MCP_ENABLE=1 -p4000:4000 apollo-runtime
+```
+
+**Railway deployment:**
+Add `MCP_ENABLE=1` to your environment variables in the Railway dashboard.
+
+**Render deployment:**
+Add `MCP_ENABLE=1` to your environment variables in the Render dashboard.
+
+**Fly.io deployment:**
+```bash
+flyctl secrets set MCP_ENABLE=1
+```
+
+### MCP Server Features
+
+When enabled, the MCP server provides:
+- Schema introspection capabilities for AI assistants
+- Structured access to GraphQL operations
+- Enhanced development experience with AI tools
+
+## Local Development
+
+**Quick test with Docker:**
+```bash
+docker build -t apollo-runtime .
+docker run -it --env APOLLO_KEY=your-key --env APOLLO_GRAPH_REF=your-graph-ref -p4000:4000 apollo-runtime
+```
+
+**Using environment file:**
+```bash
+# Create .env file (don't commit this!)
+echo "APOLLO_KEY=your-key-here" > .env
+echo "APOLLO_GRAPH_REF=your-graph-ref-here" >> .env
+
+# Run with env file
+docker run -it --env-file .env -p4000:4000 apollo-runtime
+```
+
+Visit `http://localhost:4000` to access your router.
+
+## Customization
+
+The runtime container comes with sensible defaults, but you can customize the router configuration:
+
+1. **Uncomment the lines in `Dockerfile`** to use a custom configuration:
+   ```dockerfile
+   COPY router.yaml /config.yaml
+   CMD ["--config", "/config.yaml"]
+   ```
+
+2. **Edit `router.yaml`** to customize your router behavior
+
+3. **Rebuild and redeploy** your container
+
+## Recommended Next Steps
+
+Once you have your router deployed, consider these production-ready improvements:
+
+- [ ] **Set up CI/CD** to automatically deploy newer versions
+- [ ] **Enable Renovate** on your repo to keep Router up to date
+- [ ] **Set up deployment previews** for PRs to test changes
+- [ ] **Configure subgraph secrets** so only your routers can access them
+- [ ] **Review security settings** in your router configuration:
+  - Configure appropriate CORS settings
+  - Set up proper authentication/authorization
+- [ ] **Monitor your router** with GraphOS observability features
+- [ ] **Set up alerts** for important metrics and errors
+- [ ] **Configure caching** for better performance
+- [ ] **Clean up unused deployment files** (e.g., delete `render.yaml` if using Railway)
+
+## Support
+
+For issues with:
+- **Apollo Router**: Check the [Apollo Router documentation](https://www.apollographql.com/docs/router/)
+- **GraphOS**: Visit [GraphOS documentation](https://www.apollographql.com/docs/graphos/)
+- **This template**: Open an issue in this repository
+
+## License
+
+This template is available under the MIT License. See [LICENSE](LICENSE) for details.
