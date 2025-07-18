@@ -3,7 +3,7 @@
 
 # Apollo Router Template
 
-A starting point for deploying the Apollo Router using the new runtime container. This template provides easy deployment options for **Railway**, **Render**, and **Fly.io**.
+A starting point for deploying the Apollo Router using the new runtime container. This template provides easy deployment options for **Railway** and **Render**.
 
 > 💡 **Quick Start**: This template uses the Apollo runtime container with sensible defaults. You can deploy immediately or customize the configuration for your specific needs.
 
@@ -31,19 +31,10 @@ For more control or to use other platforms:
 
 **Render**: Use the deploy button above or connect your repo in Render
 
-**Fly.io**: 
-```bash
-flyctl launch
-flyctl secrets set APOLLO_KEY=your-key-here
-flyctl secrets set APOLLO_GRAPH_REF=your-graph-ref-here
-flyctl deploy
-```
-
 ## What's included
 
 - `Dockerfile`—configured to use the Apollo Router runtime container
 - `render.yaml`—Render deployment configuration
-- `fly.toml`—Fly.io deployment configuration
 - `router.yaml`—sample router configuration (commented out by default)
 - `.apollo/`—JSON schemas for better IDE experience
 - `.github/workflows/`—automated dependency updates
@@ -68,11 +59,6 @@ Add `MCP_ENABLE=1` to your environment variables in the Railway dashboard.
 
 **Render deployment:**
 Add `MCP_ENABLE=1` to your environment variables in the Render dashboard.
-
-**Fly.io deployment:**
-```bash
-flyctl secrets set MCP_ENABLE=1
-```
 
 ### MCP Server Features
 

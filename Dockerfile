@@ -6,3 +6,5 @@ FROM ghcr.io/apollographql/apollo-runtime:latest
 
 # Uncomment the line below if you're using a custom router configuration
 # CMD ["--config", "/config.yaml"]
+
+ENTRYPOINT ["/init"]
