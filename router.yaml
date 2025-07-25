@@ -16,6 +16,10 @@ homepage:
 include_subgraph_errors:
   all: true
 
+cors:
+  # Set to true to allow any origin
+  allow_any_origin: true
+
 limits:
   parser_max_tokens: 15000 # This is the default value.
   parser_max_recursion: 4096 # This is the default value.
