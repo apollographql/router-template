@@ -1416,6 +1416,11 @@
           "description": "#/definitions/ExecutionStage",
           "$ref": "#/definitions/ExecutionStage"
         },
+        "response_validation": {
+          "description": "Response validation defaults to true",
+          "default": true,
+          "type": "boolean"
+        },
         "router": {
           "description": "#/definitions/RouterStage",
           "$ref": "#/definitions/RouterStage"
@@ -1621,6 +1626,10 @@
           "default": "https://usage-reporting.api.apollographql.com/",
           "type": "string"
         },
+        "experimental_otlp_metrics_protocol": {
+          "description": "#/definitions/Protocol",
+          "$ref": "#/definitions/Protocol"
+        },
         "experimental_otlp_tracing_protocol": {
           "description": "#/definitions/Protocol",
           "$ref": "#/definitions/Protocol"
@@ -1776,17 +1785,17 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request`, `connect`, `connect_request` and `http_request`.",
           "default": {
-            "query_planning": true,
-            "request": true,
-            "connect": true,
-            "router": true,
             "subgraph": true,
-            "subgraph_request": true,
-            "http_request": true,
             "execution": true,
-            "parse_query": true,
+            "router": true,
+            "http_request": true,
+            "query_planning": true,
+            "connect": true,
+            "request": true,
+            "connect_request": true,
+            "subgraph_request": true,
             "supergraph": true,
-            "connect_request": true
+            "parse_query": true
           },
           "type": "object",
           "additionalProperties": {
@@ -1982,19 +1991,19 @@
       "type": "object"
     },
     "Config8": {
-      "description": "Configuration for entity caching",
+      "description": "Configuration for response caching",
       "type": "object",
       "required": [
         "subgraph"
       ],
       "properties": {
-        "enabled": {
-          "description": "Enable or disable the entity caching feature",
+        "debug": {
+          "description": "Enable debug mode for the debugger",
           "default": false,
           "type": "boolean"
         },
-        "expose_keys_in_context": {
-          "description": "Expose cache keys in context",
+        "enabled": {
+          "description": "Enable or disable the response caching feature",
           "default": false,
           "type": "boolean"
         },
@@ -2472,7 +2481,7 @@
       "type": "object",
       "properties": {
         "allow_any_origin": {
-          "description": "Set to true to allow any origin.\n\nDefaults to false Having this set to true is the only way to allow Origin: null.",
+          "description": "Set to true to allow any origin. Defaults to false. This is the only way to allow Origin: null.",
           "default": false,
           "type": "boolean"
         },
@@ -2498,22 +2507,13 @@
           },
           "nullable": true
         },
-        "match_origins": {
-          "description": "`Regex`es you want to match the origins against to determine if they're allowed. Defaults to an empty list. Note that `origins` will be evaluated before `match_origins`",
-          "default": null,
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "nullable": true
-        },
         "max_age": {
           "description": "The `Access-Control-Max-Age` header value in time units",
           "default": null,
           "type": "string"
         },
         "methods": {
-          "description": "Allowed request methods. Defaults to GET, POST, OPTIONS.",
+          "description": "Allowed request methods. See module documentation for default behavior.",
           "default": [
             "GET",
             "POST",
@@ -2524,15 +2524,31 @@
             "type": "string"
           }
         },
-        "origins": {
-          "description": "The origin(s) to allow requests from. Defaults to `https://studio.apollographql.com/` for Apollo Studio.",
+        "policies": {
+          "description": "The origin(s) to allow requests from. The router matches request origins against policies in order, first by exact match, then by regex. See module documentation for default behavior.",
           "default": [
-            "https://studio.apollographql.com"
+            {
+              "allow_credentials": null,
+              "allow_headers": [],
+              "expose_headers": [],
+              "match_origins": [],
+              "max_age": null,
+              "methods": [
+                "GET",
+                "POST",
+                "OPTIONS"
+              ],
+              "origins": [
+                "https://studio.apollographql.com"
+              ]
+            }
           ],
           "type": "array",
           "items": {
-            "type": "string"
-          }
+            "description": "#/definitions/Policy",
+            "$ref": "#/definitions/Policy"
+          },
+          "nullable": true
         }
       },
       "additionalProperties": false
@@ -4296,13 +4312,6 @@
         "path"
       ],
       "properties": {
-        "concurrent_requests": {
-          "description": "Number of concurrent invalidation requests",
-          "default": 10,
-          "type": "integer",
-          "format": "uint32",
-          "minimum": 0.0
-        },
         "listen": {
           "description": "#/definitions/ListenAddr",
           "$ref": "#/definitions/ListenAddr"
@@ -4310,13 +4319,6 @@
         "path": {
           "description": "Specify on which path you want to listen for invalidation endpoint.",
           "type": "string"
-        },
-        "scan_count": {
-          "description": "Number of keys to return at once from a redis SCAN command",
-          "default": 1000,
-          "type": "integer",
-          "format": "uint32",
-          "minimum": 0.0
         }
       },
       "additionalProperties": false
@@ -4604,11 +4606,11 @@
       "additionalProperties": false
     },
     "Metrics": {
-      "description": "Per subgraph configuration for entity caching",
+      "description": "Per subgraph configuration for response caching",
       "type": "object",
       "properties": {
         "enabled": {
-          "description": "enables metrics evaluating the benefits of entity caching",
+          "description": "enables metrics evaluating the benefits of response caching",
           "default": false,
           "type": "boolean"
         },
@@ -4995,6 +4997,145 @@
         "experimental.restricted": {
           "description": "#/definitions/Config4",
           "$ref": "#/definitions/Config4"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Policy": {
+      "description": "Configuration for a specific set of origins",
+      "type": "object",
+      "properties": {
+        "allow_credentials": {
+          "description": "Set to true to add the `Access-Control-Allow-Credentials` header for these origins",
+          "default": null,
+          "type": "boolean",
+          "nullable": true
+        },
+        "allow_headers": {
+          "description": "The headers to allow for these origins",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expose_headers": {
+          "description": "Which response headers should be made available to scripts running in the browser",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "match_origins": {
+          "description": "Regex patterns to match origins against.",
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "max_age": {
+          "description": "The `Access-Control-Max-Age` header value in time units",
+          "default": null,
+          "type": "string"
+        },
+        "methods": {
+          "description": "Allowed request methods for these origins.",
+          "default": null,
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "nullable": true
+        },
+        "origins": {
+          "description": "The origins to allow requests from.",
+          "default": [
+            "https://studio.apollographql.com"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "PostgresCacheConfig": {
+      "description": "Postgres cache configuration",
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "acquire_timeout": {
+          "description": "PostgreSQL the maximum amount of time to spend waiting for a connection (default: 50ms)",
+          "default": {
+            "secs": 0,
+            "nanos": 50000000
+          },
+          "type": "string"
+        },
+        "batch_size": {
+          "description": "The size of batch when inserting cache entries in PG (default: 100)",
+          "default": 100,
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0.0
+        },
+        "cleanup_interval": {
+          "description": "Specifies the interval between cache cleanup operations (e.g., \"2 hours\", \"30min\"). Default: 1 hour",
+          "default": {
+            "secs": 3600,
+            "nanos": 0
+          },
+          "type": "string"
+        },
+        "idle_timeout": {
+          "description": "PostgreSQL maximum idle duration for individual connection (default: 1min)",
+          "default": {
+            "secs": 60,
+            "nanos": 0
+          },
+          "type": "string"
+        },
+        "namespace": {
+          "description": "Useful when running tests in parallel to avoid conflicts",
+          "default": null,
+          "type": "string",
+          "nullable": true
+        },
+        "password": {
+          "description": "PostgreSQL password if not provided in the URLs. This field takes precedence over the password in the URL",
+          "type": "string",
+          "nullable": true
+        },
+        "pool_size": {
+          "description": "The size of the PostgreSQL connection pool",
+          "default": 5,
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0.0
+        },
+        "required_to_start": {
+          "description": "Prevents the router from starting if it cannot connect to PostgreSQL",
+          "default": false,
+          "type": "boolean"
+        },
+        "tls": {
+          "description": "#/definitions/TlsConfig",
+          "$ref": "#/definitions/TlsConfig"
+        },
+        "url": {
+          "description": "List of URL to Postgres",
+          "type": "string",
+          "format": "uri"
+        },
+        "username": {
+          "description": "PostgreSQL username if not provided in the URLs. This field takes precedence over the username in the URL",
+          "type": "string",
+          "nullable": true
         }
       },
       "additionalProperties": false
@@ -6533,7 +6674,7 @@
       ]
     },
     "Subgraph": {
-      "description": "Per subgraph configuration for entity caching",
+      "description": "Per subgraph configuration for response caching",
       "type": "object",
       "properties": {
         "enabled": {
@@ -6547,15 +6688,15 @@
           "$ref": "#/definitions/SubgraphInvalidationConfig",
           "nullable": true
         },
+        "postgres": {
+          "description": "#/definitions/PostgresCacheConfig",
+          "$ref": "#/definitions/PostgresCacheConfig",
+          "nullable": true
+        },
         "private_id": {
           "description": "Context key used to separate cache sections per user",
           "default": null,
           "type": "string",
-          "nullable": true
-        },
-        "redis": {
-          "description": "#/definitions/RedisCache",
-          "$ref": "#/definitions/RedisCache",
           "nullable": true
         },
         "ttl": {
@@ -6648,7 +6789,7 @@
       "type": "object",
       "properties": {
         "entities": {
-          "description": "Entities that can be queried through Federation’s special `_entities` field\n\nIn maps directly in the top-level `Vec` (but not in other maps nested deeper), the `__surrogateKeys` key is special. Instead of representing a field that can be selected, when its parent entity is selected its contents are added to the `response.extensions[\"apolloEntitySurrogateKeys\"]` array.",
+          "description": "Entities that can be queried through Federation’s special `_entities` field\n\nIn maps directly in the top-level `Vec` (but not in other maps nested deeper), the `__cacheTags` key is special. Instead of representing a field that can be selected, when its parent entity is selected its contents are added to the `response.extensions[\"apolloEntityCacheTags\"]` array.",
           "default": [],
           "type": "array",
           "items": {
@@ -6671,7 +6812,7 @@
           "nullable": true
         },
         "query": {
-          "description": "Data for `query` operations (excluding the special `_entities` field)\n\nIn maps nested in this one (but not at the top level), the `__surrogateKeys` key is special. Instead of representing a field that can be selected, when its parent field is selected its value is expected to be an array which is appended to the `response.extensions[\"apolloSurrogateKeys\"]` array.",
+          "description": "Data for `query` operations (excluding the special `_entities` field)\n\nIn maps nested in this one (but not at the top level), the `__cacheTags` key is special. Instead of representing a field that can be selected, when its parent field is selected its value is expected to be an array which is appended to the `response.extensions[\"apolloCacheTags\"]` array.",
           "default": {},
           "type": "object",
           "additionalProperties": true
@@ -8241,6 +8382,44 @@
       },
       "additionalProperties": false
     },
+    "TlsClientAuth2": {
+      "description": "TLS client authentication",
+      "type": "object",
+      "required": [
+        "certificate",
+        "key"
+      ],
+      "properties": {
+        "certificate": {
+          "description": "Sets the SSL client certificate as a PEM",
+          "type": "string"
+        },
+        "key": {
+          "description": "key in PEM format",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TlsConfig": {
+      "description": "Postgres TLS client configuration",
+      "type": "object",
+      "required": [
+        "certificate_authorities"
+      ],
+      "properties": {
+        "certificate_authorities": {
+          "description": "list of certificate authorities in PEM format",
+          "type": "string"
+        },
+        "client_authentication": {
+          "description": "#/definitions/TlsClientAuth2",
+          "$ref": "#/definitions/TlsClientAuth2",
+          "nullable": true
+        }
+      },
+      "additionalProperties": false
+    },
     "TlsSupergraph": {
       "description": "Configuration options pertaining to the supergraph server component.",
       "type": "object",
@@ -8416,7 +8595,7 @@
       "additionalProperties": false
     },
     "Ttl": {
-      "description": "Per subgraph configuration for entity caching",
+      "description": "Per subgraph configuration for response caching",
       "type": "string"
     },
     "Ttl2": {
