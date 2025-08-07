@@ -4,7 +4,6 @@ FROM ghcr.io/apollographql/apollo-runtime:latest
 # Uncomment the line below if you'd like to modify the router configuration.
 COPY router.yaml /config.yaml
 
-# Uncomment the line below if you're using a custom router configuration
-CMD ["--config", "/config.yaml"]
+ENV APOLLO_ROUTER_CONFIG_PATH=/config.yaml
 
 ENTRYPOINT ["/init"]

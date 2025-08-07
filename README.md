@@ -101,6 +101,27 @@ The runtime container comes with sensible defaults, but you can customize the ro
 
 3. **Rebuild and redeploy** your container
 
+## ⚠️ Security Configuration
+
+This template includes development-friendly defaults that **are not production-ready**. Review these settings before deploying to production:
+
+### CORS Configuration
+- **Current setting**: `allow_any_origin: true` - allows requests from any domain
+- **Security risk**: This can enable cross-site request forgery (CSRF) attacks
+- **For production**: Replace with specific origins in `router.yaml`:
+  ```yaml
+  cors:
+    origins:
+      - "https://yourdomain.com"
+      - "https://app.yourdomain.com"
+  ```
+- **Environment variables**: Use `${env.FRONTEND_URL}` for flexible deployments
+
+### Other Security Considerations
+- **Introspection**: Enabled by default (`introspection: true`) - disable in production
+- **Sandbox**: Enabled by default - disable in production unless needed
+- **Subgraph errors**: All errors exposed (`include_subgraph_errors.all: true`) - consider limiting in production
+
 ## Recommended Next Steps
 
 Once you have your router deployed, consider these production-ready improvements:
