@@ -1,7 +1,7 @@
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.com/deploy/apollo-router)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=github.com/apollographql/router-template)
 
-# Apollo Router Template
+# Apollo Runtime Template
 
 A starting point for deploying the Apollo Router using the new runtime container. This template provides easy deployment options for **Railway** and **Render**.
 
@@ -35,7 +35,7 @@ For more control or to use other platforms:
 
 - `Dockerfile`—configured to use the Apollo Router runtime container
 - `render.yaml`—Render deployment configuration
-- `router.yaml`—sample router configuration (commented out by default)
+- `router.yaml`—sample router configuration
 - `.apollo/`—JSON schemas for better IDE experience
 - `.github/workflows/`—automated dependency updates
 - `.vscode/` and `.idea`—recommended editor settings
@@ -51,7 +51,7 @@ To enable the MCP server, set the `MCP_ENABLE` environment variable to `1`:
 
 **Local development:**
 ```bash
-docker run -it --env APOLLO_KEY=your-key --env APOLLO_GRAPH_REF=your-graph-ref --env MCP_ENABLE=1 -p4000:4000 apollo-runtime
+docker run -it --env APOLLO_KEY=your-key --env APOLLO_GRAPH_REF=your-graph-ref --env MCP_ENABLE=1 -p 4000:4000 apollo-runtime
 ```
 
 **Railway deployment:**
@@ -72,7 +72,7 @@ When enabled, the MCP server provides:
 **Quick test with Docker:**
 ```bash
 docker build -t apollo-runtime .
-docker run -it --env APOLLO_KEY=your-key --env APOLLO_GRAPH_REF=your-graph-ref -p4000:4000 apollo-runtime
+docker run -it --env APOLLO_KEY=your-key --env APOLLO_GRAPH_REF=your-graph-ref -p 4000:4000 apollo-runtime
 ```
 
 **Using environment file:**
@@ -82,7 +82,7 @@ echo "APOLLO_KEY=your-key-here" > .env
 echo "APOLLO_GRAPH_REF=your-graph-ref-here" >> .env
 
 # Run with env file
-docker run -it --env-file .env -p4000:4000 apollo-runtime
+docker run -it --env-file .env -p 4000:4000 apollo-runtime
 ```
 
 Visit `http://localhost:4000` to access your router.
@@ -131,8 +131,8 @@ Once you have your router deployed, consider these production-ready improvements
 - [ ] **Set up deployment previews** for PRs to test changes
 - [ ] **Configure subgraph secrets** so only your routers can access them
 - [ ] **Review security settings** in your router configuration:
-  - Configure appropriate CORS settings
-  - Set up proper authentication/authorization
+  - [ ] Configure appropriate CORS settings
+  - [ ] Set up proper authentication/authorization
 - [ ] **Monitor your router** with GraphOS observability features
 - [ ] **Set up alerts** for important metrics and errors
 - [ ] **Configure caching** for better performance
@@ -143,6 +143,7 @@ Once you have your router deployed, consider these production-ready improvements
 For issues with:
 - **Apollo Router**: Check the [Apollo Router documentation](https://www.apollographql.com/docs/router/)
 - **GraphOS**: Visit [GraphOS documentation](https://www.apollographql.com/docs/graphos/)
+- ** MCP Server**: Check the [MCP Server documentation](https://www.apollographql.com/docs/apollo-mcp-server)
 - **This template**: Open an issue in this repository
 
 ## License

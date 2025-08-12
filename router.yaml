@@ -1,4 +1,3 @@
-# This configuration file is commented out by default in the Dockerfile.
 # The runtime container comes with sensible defaults that work well for most use cases.
 # Uncomment the COPY and CMD lines in the Dockerfile to use this configuration.
 

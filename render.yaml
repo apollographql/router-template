@@ -9,6 +9,9 @@ services:
         sync: false
       - key: APOLLO_KEY
         sync: false
+      - key: PORT
+        value: "4000"
+        sync: true
     region: oregon
     dockerContext: .
     dockerfilePath: ./Dockerfile
