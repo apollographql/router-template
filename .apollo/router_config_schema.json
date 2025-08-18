@@ -1,7 +1,7 @@
-{"timestamp":"2025-08-08T14:32:37.271683868Z","level":"INFO","message":"Apollo Router v2.4.0 // (c) Apollo Graph, Inc. // Licensed as ELv2 (https://go.apollo.dev/elv2)","target":"apollo_router::executable","resource":{}}
-{"timestamp":"2025-08-08T14:32:37.271728874Z","level":"INFO","message":"Anonymous usage data is gathered to inform Apollo product development.  See https://go.apollo.dev/o/privacy for details.","target":"apollo_router::executable","resource":{}}
-{"timestamp":"2025-08-08T14:32:37.271878853Z","level":"ERROR","message":"Supergraph schema at path '/config/schema.graphql' does not exist.","target":"apollo_router::router::event::schema","resource":{}}
+{"timestamp":"2025-08-18T16:27:48.381208317Z","level":"INFO","message":"Apollo Router v2.5.0 // (c) Apollo Graph, Inc. // Licensed as ELv2 (https://go.apollo.dev/elv2)","target":"apollo_router::executable","resource":{}}
+{"timestamp":"2025-08-18T16:27:48.381253461Z","level":"INFO","message":"Anonymous usage data is gathered to inform Apollo product development.  See https://go.apollo.dev/o/privacy for details.","target":"apollo_router::executable","resource":{}}
+{"timestamp":"2025-08-18T16:27:48.381414290Z","level":"ERROR","message":"Supergraph schema at path '/config/schema.graphql' does not exist.","target":"apollo_router::router::event::schema","resource":{}}
 No OTEL config provided at /config/otel-config.yaml, otelcol has not started
-{"timestamp":"2025-08-08T14:32:37.286978123Z","level":"INFO","message":"state machine transitioned","event":"NoMoreSchema","state":"Errored","previous_state":"Startup","target":"apollo_router::state_machine","resource":{}}
-{"timestamp":"2025-08-08T14:32:37.287211923Z","level":"INFO","message":"stopped","target":"apollo_router::state_machine","resource":{}}
-{"timestamp":"2025-08-08T14:32:37.287340218Z","level":"ERROR","message":"no valid schema was supplied","target":"apollo_router::executable","resource":{}}
+{"timestamp":"2025-08-18T16:27:48.397266806Z","level":"INFO","message":"state machine transitioned","event":"NoMoreSchema","state":"Errored","previous_state":"Startup","target":"apollo_router::state_machine","resource":{}}
+{"timestamp":"2025-08-18T16:27:48.397550864Z","level":"INFO","message":"stopped","target":"apollo_router::state_machine","resource":{}}
+{"timestamp":"2025-08-18T16:27:48.397811555Z","level":"ERROR","message":"no valid schema was supplied","target":"apollo_router::executable","resource":{}}
