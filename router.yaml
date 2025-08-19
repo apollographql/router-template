@@ -2,7 +2,7 @@
 # Uncomment the COPY and CMD lines in the Dockerfile to use this configuration.
 
 sandbox:
-  enabled: true
+  enabled: false
 supergraph:
   introspection: true
   listen: 0.0.0.0:${env.PORT:-4000}
