@@ -119,7 +119,7 @@ This template includes development-friendly defaults that **are not production-r
 
 ### Other Security Considerations
 - **Introspection**: Enabled by default (`introspection: true`) - disable in production
-- **Sandbox**: Enabled by default - disable in production unless needed
+- **Sandbox**: disabled by default
 - **Subgraph errors**: All errors exposed (`include_subgraph_errors.all: true`) - consider limiting in production
 
 ## Recommended Next Steps
