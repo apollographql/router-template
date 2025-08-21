@@ -9,7 +9,7 @@ A starting point for deploying the Apollo Router using the new runtime container
 
 ## Prerequisites
 
-- A [GraphOS account](https://www.apollographql.com/docs/graphos/) (free tier available)
+- A [GraphOS account](https://www.apollographql.com/docs/graphos/) (Free and usage-based tiers available)
 - Your `APOLLO_KEY` and `APOLLO_GRAPH_REF` from GraphOS Studio
 
 ## Deploy Options
