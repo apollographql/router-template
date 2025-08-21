@@ -90,6 +90,60 @@ docker run -it --env-file .env -p 4000:4000 apollo-runtime
 
 Visit `http://localhost:4000` to access your router.
 
+## Running Locally Without GraphOS
+
+You can run the Apollo Router locally using a supergraph schema file instead of connecting to GraphOS. This is useful for:
+- Local development without internet connectivity
+- Testing federation changes before publishing
+- Running in air-gapped environments
+
+### Steps to Run with Local Schema
+
+1. **Install Rover CLI** (if not already installed):
+   ```bash
+   curl -sSL https://rover.apollo.dev/nix/latest | sh
+   ```
+
+2. **Start your subgraph services** locally (ensure they're running on the ports specified in `supergraph.yaml`)
+
+3. **Compose your supergraph schema**:
+   ```bash
+   # Create the data directory if it doesn't exist
+   mkdir -p data
+   
+   # Generate the supergraph schema from your subgraphs
+   rover supergraph compose --config ./supergraph.yaml > data/schema.graphql
+   ```
+
+4. **Create a modified Dockerfile** for local development:
+   ```dockerfile
+   FROM ghcr.io/apollographql/apollo-runtime:0.0.14_router2.5.0_mcp-server0.7.0
+   
+   # Copy the router configuration
+   COPY data/router.yaml /config/router_config.yaml
+   
+   # Copy the composed supergraph schema
+   COPY data/schema.graphql /config/schema.graphql
+   
+   ENTRYPOINT ["/init"]
+   ```
+
+5. **Run the router without GraphOS credentials**:
+   ```bash
+   # Build the container
+   docker build -t apollo-router-local .
+   
+   # Run without APOLLO_KEY and APOLLO_GRAPH_REF
+   docker run -it -p 4000:4000 apollo-router-local
+   ```
+
+### Notes on Local Development
+
+- The `supergraph.yaml` file defines your federated architecture
+- Update the subgraph URLs in `supergraph.yaml` to match your local setup
+- Re-run `rover supergraph compose` whenever you change your subgraph schemas
+- The router expects the schema at `/config/schema.graphql` and config at `/config/router_config.yaml`
+
 ## Customization
 
 The runtime container comes with sensible defaults, but you can customize the router configuration:
