@@ -23,13 +23,16 @@ For more control or to use other platforms:
 
 1. **Fork or clone this repository to your own repo**
 2. **Set up your environment variables** in your deployment platform:
-   - `APOLLO_KEY` - Your GraphOS API key
+   - `APOLLO_KEY` - Your Graph API key
    - `APOLLO_GRAPH_REF` - Your graph reference (e.g., `my-graph@production`)
 3. **Deploy using one of the options below**:
 
 **Railway**: Use the deploy button above or connect your repo in Railway
 
 **Render**: Use the deploy button above or connect your repo in Render
+
+### Alternative Deployment Options
+Looking to deploy to other platforms like AWS, GCP, or Azure? Check out our comprehensive deployment guides in the [Apollo Router documentation](https://www.apollographql.com/docs/graphos/routing#deployment-guides). These guides provide step-by-step instructions for various cloud providers and deployment scenarios.
 
 ## What's included
 
@@ -38,7 +41,7 @@ For more control or to use other platforms:
 - `router.yaml`—sample router configuration
 - `.apollo/`—JSON schemas for better IDE experience
 - `.github/workflows/`—automated dependency updates
-- `.vscode/` and `.idea`—recommended editor settings
+- `.vscode/` and `.idea/`—recommended editor settings (install recommended extensions when prompted)
 - `renovate.json`—keeps Router version up to date
 
 ## Apollo MCP Server
@@ -144,6 +147,7 @@ For issues with:
 - **Apollo Router**: Check the [Apollo Router documentation](https://www.apollographql.com/docs/router/)
 - **GraphOS**: Visit [GraphOS documentation](https://www.apollographql.com/docs/graphos/)
 - ** MCP Server**: Check the [MCP Server documentation](https://www.apollographql.com/docs/apollo-mcp-server)
+- **IDE Support**: Check the [IDE Extensions documentation](https://www.apollographql.com/docs/apollo-server/ide-support/)
 - **This template**: Open an issue in this repository
 
 ## License
