@@ -1,0 +1,13 @@
+sandbox:
+  enabled: true
+supergraph:
+  introspection: true
+  listen: 0.0.0.0:4000
+homepage:
+  enabled: false
+
+# apq:
+#   router:
+#     cache:
+#       in_memory:
+#         limit: 512 # This is the default value
