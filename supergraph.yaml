@@ -1,0 +1,8 @@
+federation_version: =2.6.0
+subgraphs:
+  products:
+    schema:
+      subgraph_url: http://localhost:4001
+  users:
+    schema:
+      subgraph_url: http://localhost:4002
