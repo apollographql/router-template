@@ -1,8 +1,26 @@
-federation_version: =2.6.0
+# Supergraph Configuration for Local Development
+# This file defines your federated GraphQL architecture by listing all subgraphs.
+#
+# To use this file for local development without GraphOS:
+# 1. Install rover CLI: https://www.apollographql.com/docs/rover/getting-started
+# 2. Run: rover supergraph compose --config ./supergraph.yaml > data/schema.graphql
+# 3. The generated schema will be used by the router container
+#
+# Note: The subgraph URLs below should point to your running subgraph services.
+# Update these URLs to match your local development setup.
+
+federation_version: =2.10.0
 subgraphs:
   products:
     schema:
+      # URL where your products subgraph is running
       subgraph_url: http://localhost:4001
   users:
     schema:
+      # URL where your users subgraph is running
       subgraph_url: http://localhost:4002
+  
+  # Add more subgraphs as needed:
+  # inventory:
+  #   schema:
+  #     subgraph_url: http://localhost:4003
