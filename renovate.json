@@ -17,7 +17,7 @@
       ],
       "datasourceTemplate": "docker",
       "depNameTemplate": "ghcr.io/apollographql/apollo-runtime",
-      "autoReplaceStringTemplate": "FROM ghcr.io/apollographql/apollo-runtime:{{newValue}}_{{rest}}"
+      "autoReplaceStringTemplate": "FROM ghcr.io/apollographql/apollo-runtime:{{newValue}}"
     }
   ]
 }
