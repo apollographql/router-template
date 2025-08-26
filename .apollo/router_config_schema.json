@@ -41,12 +41,12 @@
       "$ref": "#/definitions/DemandControlConfig"
     },
     "enhanced_client_awareness": {
-      "description": "#/definitions/Config7",
-      "$ref": "#/definitions/Config7"
+      "description": "#/definitions/Config8",
+      "$ref": "#/definitions/Config8"
     },
     "experimental_chaos": {
-      "description": "#/definitions/Chaos",
-      "$ref": "#/definitions/Chaos"
+      "description": "#/definitions/Config3",
+      "$ref": "#/definitions/Config3"
     },
     "experimental_type_conditioned_fetching": {
       "description": "Type conditioned fetching configuration.",
@@ -62,8 +62,8 @@
       "$ref": "#/definitions/ForbidMutationsConfig"
     },
     "headers": {
-      "description": "#/definitions/Config9",
-      "$ref": "#/definitions/Config9"
+      "description": "#/definitions/Config10",
+      "$ref": "#/definitions/Config10"
     },
     "health_check": {
       "description": "#/definitions/Config",
@@ -74,8 +74,8 @@
       "$ref": "#/definitions/Homepage"
     },
     "include_subgraph_errors": {
-      "description": "#/definitions/Config10",
-      "$ref": "#/definitions/Config10"
+      "description": "#/definitions/Config11",
+      "$ref": "#/definitions/Config11"
     },
     "license_enforcement": {
       "description": "#/definitions/LicenseEnforcementConfig",
@@ -98,16 +98,16 @@
       "$ref": "#/definitions/Plugins"
     },
     "preview_entity_cache": {
-      "description": "#/definitions/Config11",
-      "$ref": "#/definitions/Config11"
+      "description": "#/definitions/Config12",
+      "$ref": "#/definitions/Config12"
     },
     "preview_file_uploads": {
       "description": "#/definitions/FileUploadsConfig",
       "$ref": "#/definitions/FileUploadsConfig"
     },
     "progressive_override": {
-      "description": "#/definitions/Config12",
-      "$ref": "#/definitions/Config12"
+      "description": "#/definitions/Config13",
+      "$ref": "#/definitions/Config13"
     },
     "rhai": {
       "description": "#/definitions/Conf6",
@@ -138,8 +138,8 @@
       "$ref": "#/definitions/Tls"
     },
     "traffic_shaping": {
-      "description": "#/definitions/Config18",
-      "$ref": "#/definitions/Config18"
+      "description": "#/definitions/Config19",
+      "$ref": "#/definitions/Config19"
     }
   },
   "patternProperties": {
@@ -151,8 +151,8 @@
       }
     },
     "^experimental_response_cache$": {
-      "description": "#/definitions/Config8",
-      "$ref": "#/definitions/Config8"
+      "description": "#/definitions/Config9",
+      "$ref": "#/definitions/Config9"
     }
   },
   "additionalProperties": false,
@@ -600,19 +600,6 @@
             "type": "string"
           },
           "uniqueItems": true
-        }
-      },
-      "additionalProperties": false
-    },
-    "Chaos": {
-      "description": "Configuration for chaos testing, trying to reproduce bugs that require uncommon conditions. You probably don’t want this in production!",
-      "type": "object",
-      "properties": {
-        "force_reload": {
-          "description": "Force a hot reload of the Router (as if the schema or configuration had changed) at a regular time interval.",
-          "default": null,
-          "type": "string",
-          "nullable": true
         }
       },
       "additionalProperties": false
@@ -1368,8 +1355,8 @@
       "type": "object",
       "properties": {
         "connector": {
-          "description": "#/definitions/Config6",
-          "$ref": "#/definitions/Config6",
+          "description": "#/definitions/Config7",
+          "$ref": "#/definitions/Config7",
           "nullable": true
         },
         "router": {
@@ -1378,8 +1365,8 @@
           "nullable": true
         },
         "subgraph": {
-          "description": "#/definitions/Config5",
-          "$ref": "#/definitions/Config5",
+          "description": "#/definitions/Config6",
+          "$ref": "#/definitions/Config6",
           "nullable": true
         }
       },
@@ -1485,8 +1472,8 @@
       "type": "object",
       "properties": {
         "apollo": {
-          "description": "#/definitions/Config13",
-          "$ref": "#/definitions/Config13"
+          "description": "#/definitions/Config14",
+          "$ref": "#/definitions/Config14"
         },
         "exporters": {
           "description": "#/definitions/Exporters",
@@ -1525,6 +1512,30 @@
       "additionalProperties": false
     },
     "Config10": {
+      "description": "Configuration for header propagation",
+      "type": "object",
+      "properties": {
+        "all": {
+          "description": "#/definitions/HeadersLocation",
+          "$ref": "#/definitions/HeadersLocation",
+          "nullable": true
+        },
+        "connector": {
+          "description": "#/definitions/ConnectorHeadersConfiguration",
+          "$ref": "#/definitions/ConnectorHeadersConfiguration"
+        },
+        "subgraphs": {
+          "description": "Rules to specific subgraphs",
+          "type": "object",
+          "additionalProperties": {
+            "description": "#/definitions/HeadersLocation",
+            "$ref": "#/definitions/HeadersLocation"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Config11": {
       "description": "Configuration for exposing errors that originate from subgraphs",
       "type": "object",
       "properties": {
@@ -1544,7 +1555,7 @@
       },
       "additionalProperties": false
     },
-    "Config11": {
+    "Config12": {
       "description": "Configuration for entity caching",
       "type": "object",
       "required": [
@@ -1577,11 +1588,11 @@
       },
       "additionalProperties": false
     },
-    "Config12": {
+    "Config13": {
       "description": "Configuration for the progressive override plugin",
       "type": "object"
     },
-    "Config13": {
+    "Config14": {
       "type": "object",
       "properties": {
         "batch_processor": {
@@ -1634,6 +1645,11 @@
           "description": "#/definitions/Protocol",
           "$ref": "#/definitions/Protocol"
         },
+        "experimental_subgraph_metrics": {
+          "description": "Enable sending additional subgraph metrics to Apollo Studio via OTLP",
+          "default": false,
+          "type": "boolean"
+        },
         "field_level_instrumentation_sampler": {
           "description": "#/definitions/SamplerOption",
           "$ref": "#/definitions/SamplerOption"
@@ -1661,7 +1677,7 @@
       },
       "additionalProperties": false
     },
-    "Config14": {
+    "Config15": {
       "type": "object",
       "required": [
         "enabled"
@@ -1700,7 +1716,7 @@
       },
       "additionalProperties": false
     },
-    "Config15": {
+    "Config16": {
       "description": "Prometheus configuration",
       "type": "object",
       "properties": {
@@ -1725,7 +1741,7 @@
       },
       "additionalProperties": false
     },
-    "Config16": {
+    "Config17": {
       "type": "object",
       "required": [
         "enabled"
@@ -1746,7 +1762,7 @@
       },
       "additionalProperties": false
     },
-    "Config17": {
+    "Config18": {
       "type": "object",
       "required": [
         "enabled"
@@ -1785,17 +1801,17 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request`, `connect`, `connect_request` and `http_request`.",
           "default": {
+            "router": true,
             "subgraph": true,
             "execution": true,
-            "router": true,
+            "connect": true,
+            "supergraph": true,
+            "connect_request": true,
             "http_request": true,
             "query_planning": true,
-            "connect": true,
-            "request": true,
-            "connect_request": true,
+            "parse_query": true,
             "subgraph_request": true,
-            "supergraph": true,
-            "parse_query": true
+            "request": true
           },
           "type": "object",
           "additionalProperties": {
@@ -1805,7 +1821,7 @@
       },
       "additionalProperties": false
     },
-    "Config18": {
+    "Config19": {
       "description": "Configuration for the experimental traffic shaping plugin",
       "type": "object",
       "properties": {
@@ -1925,6 +1941,25 @@
       "additionalProperties": false
     },
     "Config3": {
+      "description": "Configuration for chaos testing, trying to reproduce bugs that require uncommon conditions. You probably don't want this in production!\n\n## How Chaos Reloading Works\n\nThe chaos system automatically captures and replays the last known schema and configuration events to force hot reloads even when the underlying content hasn't actually changed. This is particularly useful for memory leak detection during hot reload scenarios. If configured, it will activate upon the first config event that is encountered.\n\n### Schema Reloading (`force_schema_reload`) When enabled, the router will periodically replay the last schema event with a timestamp comment injected into the SDL (e.g., `# Chaos reload timestamp: 1234567890`). This ensures the schema is seen as \"different\" and triggers a full hot reload, even though the functional schema content is identical.\n\n### Configuration Reloading (`force_config_reload`) When enabled, the router will periodically replay the last configuration event. The configuration is cloned and re-emitted, which triggers the router's configuration change detection and reload logic.\n\n### Example Usage ```yaml experimental_chaos: force_schema_reload: \"30s\"    # Trigger schema reload every 30 seconds force_config_reload: \"2m\"     # Trigger config reload every 2 minutes ```",
+      "type": "object",
+      "properties": {
+        "force_config_reload": {
+          "description": "Force a hot reload of the configuration at regular intervals by replaying the last configuration event. This triggers the router's configuration change detection even when the configuration content hasn't actually changed.\n\nThe system automatically captures the last configuration event and replays it to force configuration reload processing.",
+          "default": null,
+          "type": "string",
+          "nullable": true
+        },
+        "force_schema_reload": {
+          "description": "Force a hot reload of the schema at regular intervals by injecting a timestamp comment into the SDL. This ensures schema reloads occur even when the functional schema content hasn't changed, which is useful for testing memory leaks during schema hot reloads.\n\nThe system automatically captures the last schema event and replays it with a timestamp comment added to make it appear \"different\" to the reload detection logic.",
+          "default": null,
+          "type": "string",
+          "nullable": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "Config4": {
       "description": "This is a broken plugin for testing purposes only.",
       "type": "object",
       "required": [
@@ -1937,7 +1972,7 @@
         }
       }
     },
-    "Config4": {
+    "Config5": {
       "description": "Restricted plugin (for testing purposes only)",
       "type": "object",
       "required": [
@@ -1950,7 +1985,7 @@
         }
       }
     },
-    "Config5": {
+    "Config6": {
       "description": "Configure subgraph authentication",
       "type": "object",
       "properties": {
@@ -1971,7 +2006,7 @@
       },
       "additionalProperties": false
     },
-    "Config6": {
+    "Config7": {
       "description": "Configure connector authentication",
       "type": "object",
       "properties": {
@@ -1987,10 +2022,10 @@
       },
       "additionalProperties": false
     },
-    "Config7": {
+    "Config8": {
       "type": "object"
     },
-    "Config8": {
+    "Config9": {
       "description": "Configuration for response caching",
       "type": "object",
       "required": [
@@ -2016,33 +2051,16 @@
           "description": "#/definitions/Metrics",
           "$ref": "#/definitions/Metrics"
         },
+        "private_queries_buffer_size": {
+          "description": "Buffer size for known private queries (default: 2048)",
+          "default": 2048,
+          "type": "integer",
+          "format": "uint",
+          "minimum": 1.0
+        },
         "subgraph": {
           "description": "#/definitions/SubgraphConfiguration_for_Subgraph",
           "$ref": "#/definitions/SubgraphConfiguration_for_Subgraph"
-        }
-      },
-      "additionalProperties": false
-    },
-    "Config9": {
-      "description": "Configuration for header propagation",
-      "type": "object",
-      "properties": {
-        "all": {
-          "description": "#/definitions/HeadersLocation",
-          "$ref": "#/definitions/HeadersLocation",
-          "nullable": true
-        },
-        "connector": {
-          "description": "#/definitions/ConnectorHeadersConfiguration",
-          "$ref": "#/definitions/ConnectorHeadersConfiguration"
-        },
-        "subgraphs": {
-          "description": "Rules to specific subgraphs",
-          "type": "object",
-          "additionalProperties": {
-            "description": "#/definitions/HeadersLocation",
-            "$ref": "#/definitions/HeadersLocation"
-          }
         }
       },
       "additionalProperties": false
@@ -2297,6 +2315,68 @@
             "connector_response_mapping_problems": {
               "description": "#/definitions/MappingProblems",
               "$ref": "#/definitions/MappingProblems"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "request_context"
+          ],
+          "properties": {
+            "default": {
+              "description": "#/definitions/AttributeValue",
+              "$ref": "#/definitions/AttributeValue",
+              "nullable": true
+            },
+            "request_context": {
+              "description": "The request context key.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "supergraph_operation_name"
+          ],
+          "properties": {
+            "default": {
+              "description": "Optional default value.",
+              "type": "string",
+              "nullable": true
+            },
+            "supergraph_operation_name": {
+              "description": "#/definitions/OperationName",
+              "$ref": "#/definitions/OperationName"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "supergraph_operation_kind"
+          ],
+          "properties": {
+            "supergraph_operation_kind": {
+              "description": "#/definitions/OperationKind",
+              "$ref": "#/definitions/OperationKind"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "connector_on_response_error"
+          ],
+          "properties": {
+            "connector_on_response_error": {
+              "description": "Boolean set to true if the response's `is_successful` condition is false. If this is not set, returns true when the response contains a non-200 status code",
+              "type": "boolean"
             }
           },
           "additionalProperties": false
@@ -4525,10 +4605,28 @@
       "additionalProperties": false
     },
     "MappingProblems": {
-      "type": "string",
-      "enum": [
-        "problems",
-        "count"
+      "oneOf": [
+        {
+          "description": "String representation of all problems",
+          "type": "string",
+          "enum": [
+            "problems"
+          ]
+        },
+        {
+          "description": "The count of mapping problems",
+          "type": "string",
+          "enum": [
+            "count"
+          ]
+        },
+        {
+          "description": "Whether there are any mapping problems",
+          "type": "string",
+          "enum": [
+            "boolean"
+          ]
+        }
       ]
     },
     "MetricAggregation": {
@@ -4658,12 +4756,12 @@
           "$ref": "#/definitions/MetricsCommon"
         },
         "otlp": {
-          "description": "#/definitions/Config14",
-          "$ref": "#/definitions/Config14"
-        },
-        "prometheus": {
           "description": "#/definitions/Config15",
           "$ref": "#/definitions/Config15"
+        },
+        "prometheus": {
+          "description": "#/definitions/Config16",
+          "$ref": "#/definitions/Config16"
         }
       },
       "additionalProperties": false
@@ -4983,8 +5081,8 @@
     "Plugins": {
       "properties": {
         "experimental.broken": {
-          "description": "#/definitions/Config3",
-          "$ref": "#/definitions/Config3"
+          "description": "#/definitions/Config4",
+          "$ref": "#/definitions/Config4"
         },
         "experimental.expose_query_plan": {
           "description": "#/definitions/ExposeQueryPlanConfig",
@@ -4995,8 +5093,8 @@
           "$ref": "#/definitions/RecordConfig"
         },
         "experimental.restricted": {
-          "description": "#/definitions/Config4",
-          "$ref": "#/definitions/Config4"
+          "description": "#/definitions/Config5",
+          "$ref": "#/definitions/Config5"
         }
       },
       "additionalProperties": false
@@ -5509,6 +5607,15 @@
         "urls"
       ],
       "properties": {
+        "metrics_interval": {
+          "description": "Interval for collecting Redis metrics (default: 1s)",
+          "default": {
+            "secs": 0,
+            "nanos": 0
+          },
+          "type": "string",
+          "nullable": true
+        },
         "namespace": {
           "description": "namespace used to prefix Redis keys",
           "type": "string",
@@ -8495,24 +8602,24 @@
           "$ref": "#/definitions/TracingCommon"
         },
         "datadog": {
-          "description": "#/definitions/Config17",
-          "$ref": "#/definitions/Config17"
+          "description": "#/definitions/Config18",
+          "$ref": "#/definitions/Config18"
         },
         "experimental_response_trace_id": {
           "description": "#/definitions/ExposeTraceId",
           "$ref": "#/definitions/ExposeTraceId"
         },
         "otlp": {
-          "description": "#/definitions/Config14",
-          "$ref": "#/definitions/Config14"
+          "description": "#/definitions/Config15",
+          "$ref": "#/definitions/Config15"
         },
         "propagation": {
           "description": "#/definitions/Propagation",
           "$ref": "#/definitions/Propagation"
         },
         "zipkin": {
-          "description": "#/definitions/Config16",
-          "$ref": "#/definitions/Config16"
+          "description": "#/definitions/Config17",
+          "$ref": "#/definitions/Config17"
         }
       },
       "additionalProperties": false
