@@ -1785,17 +1785,17 @@
         "span_metrics": {
           "description": "Which spans will be eligible for span stats to be collected for viewing in the APM view. Defaults to true for `request`, `router`, `query_parsing`, `supergraph`, `execution`, `query_planning`, `subgraph`, `subgraph_request`, `connect`, `connect_request` and `http_request`.",
           "default": {
-            "subgraph": true,
-            "execution": true,
-            "router": true,
-            "http_request": true,
-            "query_planning": true,
-            "connect": true,
-            "request": true,
             "connect_request": true,
-            "subgraph_request": true,
+            "parse_query": true,
             "supergraph": true,
-            "parse_query": true
+            "router": true,
+            "request": true,
+            "query_planning": true,
+            "subgraph": true,
+            "http_request": true,
+            "execution": true,
+            "connect": true,
+            "subgraph_request": true
           },
           "type": "object",
           "additionalProperties": {

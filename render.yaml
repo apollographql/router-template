@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: Apollo Router
+    name: apollo-router
     runtime: docker
     repo: https://github.com/apollographql/router-template
     plan: free
@@ -9,6 +9,9 @@ services:
         sync: false
       - key: APOLLO_KEY
         sync: false
+      - key: PORT
+        value: "4000"
+        sync: true
     region: oregon
     dockerContext: .
     dockerfilePath: ./Dockerfile

@@ -4,5 +4,20 @@
     "config:base",
     ":automergeMinor",
     "schedule:automergeWeekdays"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "(^|/)Dockerfile$",
+        "(^|/)Dockerfile\\.[^/]*$"
+      ],
+      "matchStrings": [
+        "(?:^|\\n)FROM\\s+ghcr\\.io/apollographql/apollo-runtime:(?<currentValue>[^_\\s]+)_(?<rest>[^\\r\\n\\s]+)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "ghcr.io/apollographql/apollo-runtime",
+      "autoReplaceStringTemplate": "FROM ghcr.io/apollographql/apollo-runtime:{{newValue}}"
+    }
   ]
 }

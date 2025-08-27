@@ -13,9 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5.0.0
       - name: Build Docker image
-        run: docker build -t router .
+        run: docker build -t runtime .
       - name: Run Router
-        run: docker run -d --name router -p 4000:4000 -v ./.github/workflows/supergraph.graphql:/dist/supergraph.graphql router -s supergraph.graphql
+        run: docker run -d --name runtime -p 4000:4000 -v ./.github/workflows/router.yaml:/config/router_config.yaml -v ./.github/workflows/supergraph.graphql:/config/schema.graphql runtime
       - name: Wait for Router to start
         run: sleep 5
       - name: Test Router
