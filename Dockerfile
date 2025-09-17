@@ -4,6 +4,8 @@ FROM ghcr.io/apollographql/apollo-runtime:0.0.14_router2.5.0_mcp-server0.7.0
 # The runtime container comes with a set of default values that work well for most use cases.
 # Uncomment the line below if you'd like to modify the router configuration.
 COPY router.yaml /config/router_config.yaml
+COPY mcp_copnfig.yaml /config/mcp_config.yaml
+
 
 # For local development without GraphOS:
 # Uncomment the line below to use a locally composed supergraph schema
