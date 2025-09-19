@@ -46,7 +46,7 @@ Looking to deploy to other platforms like AWS, GCP, or Azure? Check out our comp
 
 ## Apollo MCP Server
 
-The Apollo Router includes an optional MCP (Model Context Protocol) server that is disabled by default. This server provides AI assistants with structured access to your GraphQL schema and operations.
+The Apollo Runtime container includes an optional MCP (Model Context Protocol) server that is disabled by default. This server provides AI assistants with structured access to your GraphQL schema and operations.
 
 ### Enabling MCP Server
 
