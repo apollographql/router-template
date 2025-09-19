@@ -1,10 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    ":automergeMinor",
-    "schedule:automergeWeekdays"
-  ],
+  "extends": ["config:base", ":automergeMinor", "schedule:automergeWeekdays"],
   "customManagers": [
     {
       "customType": "regex",
