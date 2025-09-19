@@ -1,24 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    ":automergeMinor",
-    "schedule:automergeWeekdays"
-  ],
+  "extends": ["config:base", ":automergeMinor", "schedule:automergeWeekdays"],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/)Dockerfile$",
-        "(^|/)Dockerfile\\.[^/]*$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/",
+        "/(^|/)Dockerfile\\.[^/]*$/"
       ],
       "matchStrings": [
-        "(?:^|\\n)FROM\\s+(?<depName>ghcr\\.io/apollographql/apollo-runtime):(?<currentValue>[^\\s]+)"
+        "(?:^|\\r?\\n)FROM\\s+(?<depName>ghcr\\.io/apollographql/apollo-runtime):(?<currentValue>[^\\s#]+)"
       ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://ghcr.io",
       "versioningTemplate": "loose",
-      "autoReplaceStringTemplate": "FROM {{depName}}:{{newValue}}"
+      "autoReplaceStringTemplate": "FROM {{{depName}}}:{{{newValue}}}"
     }
   ]
 }
