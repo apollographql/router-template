@@ -20,5 +20,17 @@
       "versioningTemplate": "loose",
       "autoReplaceStringTemplate": "FROM {{{depName}}}:{{{newValue}}}"
     }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/apollographql/apollo-runtime"
+      ],
+      "minimumReleaseAge": "0 days",
+      "prCreation": "immediate"
+    }
   ]
 }
