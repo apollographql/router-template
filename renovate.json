@@ -28,11 +28,15 @@
       "versioning": "loose"
     },
     {
+      "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
+      "matchUpdateTypes": ["pin", "digest"],
+      "enabled": false
+    },
+    {
       "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
-      "minimumReleaseAge": "0 days",
-      "prCreation": "immediate",
-      "pinDigests": true
+      "allowedVersions": "/^\\d+\\.\\d+\\.\\d+_router\\d+\\.\\d+\\.\\d+_mcp-server\\d+\\.\\d+\\.\\d+$/",
+      "prCreation": "immediate"
     }
   ]
 }
