@@ -23,15 +23,16 @@
   ],
   "packageRules": [
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "ghcr.io/apollographql/apollo-runtime"
-      ],
-      "allowedVersions": "/^\\d+\\.\\d+\\.\\d+_router\\d+\\.\\d+\\.\\d+_mcp-server\\d+\\.\\d+\\.\\d+$/",
+      "matchManagers": ["dockerfile"],
+      "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
+      "versioning": "loose"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
       "minimumReleaseAge": "0 days",
-      "prCreation": "immediate"
+      "prCreation": "immediate",
+      "pinDigests": true
     }
   ]
 }
