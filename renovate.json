@@ -8,34 +8,26 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/|\\.)Dockerfile$/",
-        "/(^|/)Dockerfile\\.[^/]*$/"
-      ],
+      "managerFilePatterns": ["(^|/)Dockerfile$"],
       "matchStrings": [
         "(?:^|\\r?\\n)FROM\\s+(?<depName>ghcr\\.io/apollographql/apollo-runtime):(?<currentValue>[^\\s#]+)"
       ],
       "datasourceTemplate": "docker",
       "registryUrlTemplate": "https://ghcr.io",
-      "versioningTemplate": "loose",
-      "autoReplaceStringTemplate": "FROM {{{depName}}}:{{{newValue}}}"
+      "versioningTemplate": "loose"
     }
   ],
   "packageRules": [
     {
       "matchManagers": ["dockerfile"],
       "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
-      "versioning": "loose"
-    },
-    {
-      "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
-      "matchUpdateTypes": ["pin", "digest"],
       "enabled": false
     },
     {
-      "matchDatasources": ["docker"],
+      "matchManagers": ["regex"],
       "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
       "allowedVersions": "/^\\d+\\.\\d+\\.\\d+_router\\d+\\.\\d+\\.\\d+_mcp-server\\d+\\.\\d+\\.\\d+$/",
+      "enabled": true,
       "prCreation": "immediate"
     }
   ]
