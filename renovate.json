@@ -5,10 +5,18 @@
     ":automergeMinor",
     "schedule:automergeWeekdays"
   ],
+  "dockerfile": {
+    "packageRules": [
+      {
+        "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
+        "enabled": false
+      }
+    ]
+  },
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/(^|\\/)Dockerfile(\\.[^/]+)?$/"],
+      "fileMatch": ["(^|/)Dockerfile$"],
       "matchStrings": [
         "(?:^|\\r?\\n)FROM\\s+(?<depName>ghcr\\.io/apollographql/apollo-runtime):(?<currentValue>[^\\s#]+)"
       ],
