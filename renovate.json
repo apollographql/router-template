@@ -25,7 +25,6 @@
       "allowedVersions": "/^\\d+\\.\\d+\\.\\d+_router\\d+\\.\\d+\\.\\d+_mcp-server\\d+\\.\\d+\\.\\d+$/",
       "enabled": true,
       "recreateClosed": true,
-      "branchTopic": "apollo-runtime-preview-{{newValue}}",
       "prCreation": "immediate"
     }
   ]
