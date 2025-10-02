@@ -5,29 +5,12 @@
     ":automergeMinor",
     "schedule:automergeWeekdays"
   ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["(^|/)Dockerfile$"],
-      "matchStrings": [
-        "(?:^|\\r?\\n)FROM\\s+(?<depName>ghcr\\.io/apollographql/apollo-runtime):(?<currentValue>[^\\s#]+)"
-      ],
-      "datasourceTemplate": "docker",
-      "registryUrlTemplate": "https://ghcr.io",
-      "versioningTemplate": "loose"
-    }
-  ],
   "packageRules": [
     {
-      "matchManagers": ["dockerfile"],
-      "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
-      "enabled": false
-    },
-    {
-      "matchManagers": ["regex"],
+      "matchDatasources": ["docker"],
       "matchPackageNames": ["ghcr.io/apollographql/apollo-runtime"],
       "allowedVersions": "/^\\d+\\.\\d+\\.\\d+_router\\d+\\.\\d+\\.\\d+_mcp-server\\d+\\.\\d+\\.\\d+$/",
-      "enabled": true,
+      "versioning": "loose",
       "prCreation": "immediate"
     }
   ]
