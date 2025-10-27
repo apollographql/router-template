@@ -5,11 +5,17 @@ sandbox:
   enabled: false
 supergraph:
   introspection: true
-  listen: 0.0.0.0:${env.PORT:-4000}
+  listen: 0.0.0.0:${env.ROUTER_PORT:-4000}
   query_planning:
     cache:
       in_memory:
         limit: 512 # This is the default value
+
+health_check:
+  listen: 0.0.0.0:8088
+  enabled: true
+  path: /health # Optional, default: /health
+
 homepage:
   enabled: false
 include_subgraph_errors:
