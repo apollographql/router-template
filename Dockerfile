@@ -1,5 +1,5 @@
 # renovate: datasource=docker depName=ghcr.io/apollographql/apollo-runtime extractVersion=^[^_]+
-FROM ghcr.io/apollographql/apollo-runtime:0.0.68_router2.15.0_mcp-server1.14.0
+FROM ghcr.io/apollographql/apollo-runtime:0.0.88_router2.17.0_mcp-server1.17.0
 
 # The runtime container comes with a set of default values that work well for most use cases.
 # Uncomment the line below if you'd like to modify the router configuration.
